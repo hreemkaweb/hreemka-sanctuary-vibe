@@ -473,7 +473,7 @@ export function FAQ() {
     <section id="faq" className="veil py-28 sm:py-36">
       <div className="mx-auto max-w-3xl px-6">
         <SectionHeading eyebrow="Questions" title="Everything you may be wondering" />
-        <div className="mt-14 divide-y divide-border">
+        <div className="liquid-glass mt-14 divide-y divide-border/60 rounded-[2rem] px-8 py-2 sm:px-10">
           {faqs.map(([q, a], i) => (
             <div key={q} className="py-6">
               <button
