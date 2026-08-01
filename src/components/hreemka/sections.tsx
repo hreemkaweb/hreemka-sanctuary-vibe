@@ -28,52 +28,55 @@ export function Nav() {
   }, []);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
-        scrolled ? "glass" : ""
-      }`}
-    >
-      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-6 py-4">
-        <a
-          href="#top"
-          className={`min-w-0 font-display text-2xl tracking-[0.28em] uppercase transition-colors ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
-          }`}
-        >
-          Hreemka
-        </a>
-
-        <nav className="hidden items-center gap-8 lg:flex">
-          {navLinks.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className={`text-xs tracking-[0.18em] uppercase transition-opacity hover:opacity-60 ${
-                scrolled ? "text-foreground" : "text-primary-foreground"
-              }`}
-            >
-              {l.label}
-            </a>
-          ))}
-          <a href="#booking" className="btn-sacred !px-6 !py-3">
-            Book now
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+      <div
+        className={`liquid-glass mx-auto max-w-7xl rounded-full transition-all duration-700 ${
+          scrolled ? "liquid-glass-strong" : ""
+        }`}
+      >
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 sm:px-7">
+          <a
+            href="#top"
+            className={`min-w-0 font-display text-2xl tracking-[0.28em] uppercase transition-colors ${
+              scrolled ? "text-foreground" : "text-primary-foreground"
+            }`}
+          >
+            Hreemka
           </a>
-        </nav>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-          className={`shrink-0 rounded-full border border-current/30 px-4 py-2 text-xs tracking-[0.2em] uppercase lg:hidden ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
-          }`}
-        >
-          {open ? "Close" : "Menu"}
-        </button>
+          <nav className="hidden items-center gap-8 lg:flex">
+            {navLinks.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className={`text-xs tracking-[0.18em] uppercase transition-opacity hover:opacity-60 ${
+                  scrolled ? "text-foreground" : "text-primary-foreground"
+                }`}
+              >
+                {l.label}
+              </a>
+            ))}
+            <a href="#booking" className="btn-sacred !px-6 !py-3">
+              Book now
+            </a>
+          </nav>
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+            className={`shrink-0 rounded-full border border-current/30 px-4 py-2 text-xs tracking-[0.2em] uppercase lg:hidden ${
+              scrolled ? "text-foreground" : "text-primary-foreground"
+            }`}
+          >
+            {open ? "Close" : "Menu"}
+          </button>
+        </div>
       </div>
 
       {open ? (
-        <div className="glass mx-4 mb-4 rounded-3xl p-6 lg:hidden">
+        <div className="liquid-glass liquid-glass-strong mx-1 mt-3 rounded-3xl p-6 lg:hidden">
+
           <div className="flex flex-col gap-4">
             {navLinks.map((l) => (
               <a
