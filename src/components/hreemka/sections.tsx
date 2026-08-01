@@ -562,7 +562,15 @@ export function Booking() {
                 <textarea rows={4} maxLength={1000} className="field resize-none" placeholder="Share as much or as little as you wish" />
               </Field>
             </div>
+            <label className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground sm:col-span-2">
+              <input type="checkbox" required className="glass-check mt-0.5" />
+              <span>
+                I understand this is a supportive wellness consultation and consent to being
+                contacted about my session.
+              </span>
+            </label>
             <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
+
               <button type="submit" className="btn-sacred">
                 Request my session
               </button>
@@ -586,9 +594,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   return (
     <label className="block">
       <span className="text-xs tracking-[0.18em] uppercase text-muted-foreground">{label}</span>
-      <div className="mt-2 [&_.field]:w-full [&_.field]:rounded-2xl [&_.field]:border [&_.field]:border-border [&_.field]:bg-card [&_.field]:px-4 [&_.field]:py-3 [&_.field]:text-sm [&_.field]:outline-none [&_.field]:transition-colors [&_.field:focus]:border-primary">
-        {children}
-      </div>
+      <div className="mt-2 [&_.field]:glass-field">{children}</div>
     </label>
   );
 }
@@ -643,7 +649,7 @@ export function Footer() {
               required
               maxLength={255}
               placeholder="Your email"
-              className="min-w-0 flex-1 rounded-full border border-border bg-card px-4 py-3 text-sm outline-none focus:border-primary"
+              className="glass-field min-w-0 flex-1 rounded-full"
             />
             <button type="submit" className="btn-sacred !px-6 !py-3">
               Join
