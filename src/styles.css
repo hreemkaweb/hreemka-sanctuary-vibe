@@ -96,7 +96,52 @@
   --shadow-soft: 0 24px 60px -30px color-mix(in oklab, var(--primary) 32%, transparent);
   --shadow-lift: 0 40px 90px -40px color-mix(in oklab, var(--primary) 42%, transparent);
   --transition-silk: 700ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---------------- Glassmorphism design tokens ----------------
+     Single source of truth for every liquid-glass surface. */
+  --glass-blur: 26px;
+  --glass-blur-sm: 14px;
+  --glass-blur-lg: 30px;
+  --glass-saturate: 180%;
+  --glass-brightness: 1.06;
+
+  /* Surface tint opacities (percent of white mixed into transparent) */
+  --glass-tint-1: 34%;
+  --glass-tint-2: 14%;
+  --glass-tint-strong-1: 62%;
+  --glass-tint-strong-2: 38%;
+  --glass-accent-tint: 10%;
+
+  --glass-surface: linear-gradient(
+    130deg,
+    color-mix(in oklab, white var(--glass-tint-1), transparent) 0%,
+    color-mix(in oklab, white var(--glass-tint-2), transparent) 42%,
+    color-mix(in oklab, var(--primary) var(--glass-accent-tint), transparent) 100%
+  );
+  --glass-surface-strong: linear-gradient(
+    130deg,
+    color-mix(in oklab, white var(--glass-tint-strong-1), transparent) 0%,
+    color-mix(in oklab, white var(--glass-tint-strong-2), transparent) 55%,
+    color-mix(in oklab, var(--primary) 12%, transparent) 100%
+  );
+
+  --glass-border-opacity: 55%;
+  --glass-border-color: color-mix(in oklab, white var(--glass-border-opacity), transparent);
+  --glass-border: 1px solid var(--glass-border-color);
+  --glass-radius: var(--radius-3xl);
+
+  --glass-shadow-outer: 0 18px 50px -24px color-mix(in oklab, var(--primary) 45%, transparent);
+  --glass-shadow-inner-top: inset 0 1px 0 color-mix(in oklab, white 75%, transparent);
+  --glass-shadow-inner-bottom: inset 0 -14px 26px -18px
+    color-mix(in oklab, var(--primary) 40%, transparent);
+  --glass-shadow: var(--glass-shadow-outer), var(--glass-shadow-inner-top),
+    var(--glass-shadow-inner-bottom);
+  --glass-shadow-hover: 0 40px 90px -40px color-mix(in oklab, var(--primary) 45%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 80%, transparent);
+
+  --glass-ring-focus: 0 0 0 3px color-mix(in oklab, var(--primary) 22%, transparent);
 }
+
 
 @layer base {
   * {
