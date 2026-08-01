@@ -649,7 +649,7 @@ export function Footer() {
               required
               maxLength={255}
               placeholder="Your email"
-              className="min-w-0 flex-1 rounded-full border border-border bg-card px-4 py-3 text-sm outline-none focus:border-primary"
+              className="glass-field min-w-0 flex-1 rounded-full"
             />
             <button type="submit" className="btn-sacred !px-6 !py-3">
               Join
