@@ -80,7 +80,7 @@ export function HeroStory() {
             loading={i === 0 ? "eager" : "lazy"}
             className={`absolute inset-0 h-full w-full object-cover transition-all duration-[1400ms] ease-out ${
               i === 0
-                ? "object-[85%_center] sm:object-[80%_center] md:object-[75%_center] lg:object-[70%_center] xl:object-[65%_center]"
+                ? "object-[92%_center] sm:object-[88%_center] md:object-[82%_center] lg:object-[78%_center] xl:object-[72%_center]"
                 : "object-center"
             }`}
             style={{
