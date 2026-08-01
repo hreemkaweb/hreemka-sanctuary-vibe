@@ -188,7 +188,7 @@ export function WhyChoose() {
         <div className="mt-16 grid gap-6 sm:grid-cols-2">
           {reasons.map((r, i) => (
             <Reveal key={r.title} delay={i * 90}>
-              <article className="card-sanctuary h-full p-9">
+              <article className="liquid-glass card-liquid h-full p-9">
                 <span className="font-display text-4xl text-gold">{`0${i + 1}`}</span>
                 <h3 className="mt-4 text-2xl">{r.title}</h3>
                 <p className="mt-3 leading-relaxed text-muted-foreground">{r.text}</p>
@@ -272,7 +272,7 @@ export function Services() {
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map(([title, text], i) => (
             <Reveal key={title} delay={(i % 3) * 90}>
-              <article className="card-sanctuary flex h-full flex-col p-8">
+              <article className="liquid-glass card-liquid flex h-full flex-col p-8">
                 <h3 className="text-2xl">{title}</h3>
                 <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{text}</p>
                 <a
@@ -313,7 +313,7 @@ export function Products() {
         <div className="mt-16 space-y-4">
           {products.map((p, i) => (
             <Reveal key={p[0]} delay={i * 70}>
-              <article className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 rounded-3xl border border-border/70 bg-card px-7 py-7 transition-colors duration-700 hover:bg-lavender">
+              <article className="liquid-glass card-liquid group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 px-7 py-7">
                 <span className="font-display text-sm text-gold">{`0${i + 1}`}</span>
                 <div className="min-w-0">
                   <h3 className="text-2xl">{p[0]}</h3>
@@ -377,7 +377,7 @@ export function Stories() {
         <div className="mt-16 grid gap-6 lg:grid-cols-3">
           {stories.map((s, i) => (
             <Reveal key={s.name} delay={i * 110}>
-              <figure className="card-sanctuary flex h-full flex-col p-9">
+              <figure className="liquid-glass card-liquid flex h-full flex-col p-9">
                 <span className="font-display text-5xl leading-none text-gold">&ldquo;</span>
                 <blockquote className="mt-3 flex-1 text-lg leading-relaxed">{s.quote}</blockquote>
                 <figcaption className="mt-7 text-xs tracking-[0.2em] uppercase text-muted-foreground">
@@ -391,7 +391,7 @@ export function Stories() {
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {testimonials.map((t, i) => (
             <Reveal key={t.name} delay={i * 80}>
-              <article className="glass h-full rounded-3xl p-7">
+              <article className="liquid-glass card-liquid h-full p-7">
                 <p className="text-sm tracking-[0.3em] text-gold">{"★".repeat(t.rating)}</p>
                 <p className="mt-3 leading-relaxed">{t.text}</p>
                 <p className="mt-5 text-xs tracking-[0.2em] uppercase text-muted-foreground">
@@ -427,7 +427,7 @@ export function Events() {
         <div className="mt-16 space-y-4">
           {events.map((e, i) => (
             <Reveal key={e.title} delay={i * 80}>
-              <article className="card-sanctuary grid grid-cols-[auto_minmax(0,1fr)] items-center gap-6 p-7 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
+              <article className="liquid-glass card-liquid grid grid-cols-[auto_minmax(0,1fr)] items-center gap-6 p-7 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
                 <div className="shrink-0 text-center">
                   <p className="font-display text-2xl text-primary">{e.date.split(" ")[0]}</p>
                   <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">
@@ -521,7 +521,7 @@ export function Booking() {
 
         <Reveal delay={120}>
           <form
-            className="glass mt-14 grid gap-5 rounded-[2rem] p-8 sm:grid-cols-2 sm:p-10"
+            className="liquid-glass liquid-glass-strong mt-14 grid gap-5 rounded-[2rem] p-8 sm:grid-cols-2 sm:p-10"
             onSubmit={(e) => {
               e.preventDefault();
               setSubmitted(true);
