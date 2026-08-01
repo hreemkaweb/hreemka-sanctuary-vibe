@@ -562,7 +562,15 @@ export function Booking() {
                 <textarea rows={4} maxLength={1000} className="field resize-none" placeholder="Share as much or as little as you wish" />
               </Field>
             </div>
+            <label className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground sm:col-span-2">
+              <input type="checkbox" required className="glass-check mt-0.5" />
+              <span>
+                I understand this is a supportive wellness consultation and consent to being
+                contacted about my session.
+              </span>
+            </label>
             <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
+
               <button type="submit" className="btn-sacred">
                 Request my session
               </button>
