@@ -586,9 +586,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   return (
     <label className="block">
       <span className="text-xs tracking-[0.18em] uppercase text-muted-foreground">{label}</span>
-      <div className="mt-2 [&_.field]:w-full [&_.field]:rounded-2xl [&_.field]:border [&_.field]:border-border [&_.field]:bg-card [&_.field]:px-4 [&_.field]:py-3 [&_.field]:text-sm [&_.field]:outline-none [&_.field]:transition-colors [&_.field:focus]:border-primary">
-        {children}
-      </div>
+      <div className="mt-2 [&_.field]:glass-field">{children}</div>
     </label>
   );
 }
