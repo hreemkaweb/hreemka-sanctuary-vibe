@@ -78,7 +78,11 @@ export function HeroStory() {
             width={1920}
             height={1200}
             loading={i === 0 ? "eager" : "lazy"}
-            className="absolute inset-0 h-full w-full object-cover transition-all duration-[1400ms] ease-out"
+            className={`absolute inset-0 h-full w-full object-cover transition-all duration-[1400ms] ease-out ${
+              i === 0
+                ? "object-[92%_center] sm:object-[88%_center] md:object-[82%_center] lg:object-[78%_center] xl:object-[72%_center]"
+                : "object-center"
+            }`}
             style={{
               opacity: active === i ? 1 : 0,
               transform: `scale(${active === i ? 1.04 : 1.14})`,
