@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { HeroStory } from "@/components/hreemka/HeroStory";
+import { ExperienceGallery } from "@/components/hreemka/ExperienceGallery";
 import {
   Booking,
   Events,
@@ -54,6 +55,8 @@ function Index() {
       <Nav />
       <main>
         <HeroStory />
+        <ExperienceGallery />
+
         <Founder />
         <WhyChoose />
         <Journey />
