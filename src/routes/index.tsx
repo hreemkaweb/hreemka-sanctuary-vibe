@@ -55,6 +55,8 @@ function Index() {
       <Nav />
       <main>
         <HeroStory />
+        <ExperienceGallery />
+
         <Founder />
         <WhyChoose />
         <Journey />
