@@ -449,3 +449,50 @@
   background-color: color-mix(in oklab, var(--gold) 70%, white);
   animation: drift 14s ease-in-out infinite;
 }
+
+/* ---------------- Experience gallery marquee ---------------- */
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@utility marquee {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:hover .marquee-track,
+  &:focus-within .marquee-track,
+  &:active .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@utility marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 70s linear infinite;
+  will-change: transform;
+}
+
+@utility marquee-group {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
