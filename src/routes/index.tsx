@@ -55,10 +55,10 @@ function Index() {
       <Nav />
       <main>
         <HeroStory />
-        <ExperienceGallery />
 
         <Founder />
         <WhyChoose />
+        <ExperienceGallery />
         <Journey />
         <Services />
         <Products />
