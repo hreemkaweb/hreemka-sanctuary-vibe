@@ -63,7 +63,7 @@ export function ExperienceGallery() {
 
       <div className="relative mx-auto max-w-6xl px-6">
         <SectionHeading
-          eyebrow="Experience Hreemka"
+          eyebrow="Our Gallery"
           title="Experience Hreemka"
           subtitle="Real people. Real healing. Real transformation."
         />
