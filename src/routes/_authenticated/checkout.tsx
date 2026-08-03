@@ -66,7 +66,12 @@ function CheckoutPage() {
           subtotal_cents: subtotalCents,
           shipping_cents: shipping,
           total_cents: total,
-          ...parsed.data,
+          shipping_name: parsed.data.shipping_name,
+          shipping_phone: parsed.data.shipping_phone,
+          shipping_address: parsed.data.shipping_address,
+          shipping_city: parsed.data.shipping_city,
+          shipping_postcode: parsed.data.shipping_postcode,
+          notes: parsed.data.notes ?? null,
         })
         .select("id, order_number")
         .single();
