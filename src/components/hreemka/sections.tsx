@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Mandala, Particles, Reveal, SectionHeading } from "./primitives";
 import founderImg from "@/assets/founder.jpg";
 
@@ -308,7 +309,7 @@ export function Products() {
         <SectionHeading
           eyebrow="Sacred companions"
           title="Objects that hold the healing between sessions"
-          subtitle="Not a shop — a small collection of consecrated pieces that extend your practice into everyday life."
+          subtitle="A small collection of consecrated pieces, available to order and delivered to your door."
         />
         <div className="mt-16 space-y-4">
           {products.map((p, i) => (
@@ -319,17 +320,20 @@ export function Products() {
                   <h3 className="text-2xl">{p[0]}</h3>
                   <p className="mt-1 leading-relaxed text-muted-foreground">{p[1]}</p>
                 </div>
-                <a
-                  href={WHATSAPP}
-                  target="_blank"
-                  rel="noreferrer"
+                <Link
+                  to="/shop"
                   className="shrink-0 text-xs tracking-[0.2em] uppercase text-primary"
                 >
-                  Enquire
-                </a>
+                  Shop
+                </Link>
               </article>
             </Reveal>
           ))}
+        </div>
+        <div className="mt-12 text-center">
+          <Link to="/shop" className="btn-sacred">
+            Visit the shop
+          </Link>
         </div>
       </div>
     </section>
