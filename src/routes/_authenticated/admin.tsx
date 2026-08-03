@@ -151,8 +151,14 @@ function ProductsAdmin() {
   const save = async () => {
     if (!draft) return;
     const priceCents = Math.round(Number(draft.price) * 100);
-    if (!draft.name.trim()) return toast.error("Name is required");
-    if (!Number.isFinite(priceCents) || priceCents < 0) return toast.error("Enter a valid price");
+    if (!draft.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+    if (!Number.isFinite(priceCents) || priceCents < 0) {
+      toast.error("Enter a valid price");
+      return;
+    }
 
     setSaving(true);
     try {
@@ -186,14 +192,20 @@ function ProductsAdmin() {
   const remove = async (p: Product) => {
     if (!window.confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("products").delete().eq("id", p.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Product deleted");
     await refresh();
   };
 
   const quickPatch = async (p: Product, patch: Partial<Product>) => {
     const { error } = await supabase.from("products").update(patch).eq("id", p.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     await refresh();
   };
 
@@ -395,7 +407,10 @@ function OrdersAdmin() {
 
   const setStatus = async (order: Order, status: string) => {
     const { error } = await supabase.from("orders").update({ status }).eq("id", order.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success(`${order.order_number} → ${status}`);
     await queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
   };
