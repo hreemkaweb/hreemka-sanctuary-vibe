@@ -34,7 +34,7 @@ function AdminPayments() {
       <div className="space-y-3">
         {data.map((p) => (
           <article key={p.id} className="liquid-glass card-liquid flex flex-wrap items-center gap-4 p-5">
-            <span className="min-w-0 flex-1 truncate">{p.reference || p.id}</span>
+            <span className="min-w-0 flex-1 truncate">{p.transaction_ref || p.id}</span>
             <span className="text-xs text-muted-foreground">{p.provider}</span>
             <span className="text-xs text-muted-foreground">{p.status}</span>
             <span className="font-display text-lg">{formatPrice(p.amount_cents, p.currency)}</span>

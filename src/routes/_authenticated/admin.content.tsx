@@ -24,7 +24,7 @@ function AdminContent() {
   });
 
   useEffect(() => {
-    setValues(Object.fromEntries(data.map((row) => [row.key, row.value ?? ""])));
+    setValues(Object.fromEntries(data.map((row) => [row.key, String(row.value ?? "")])));
   }, [data]);
 
   const save = async () => {

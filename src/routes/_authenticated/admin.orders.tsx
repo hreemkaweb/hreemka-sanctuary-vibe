@@ -27,7 +27,7 @@ function AdminOrders() {
     },
   });
 
-  const patch = async (id: string, values: Record<string, string>) => {
+  const patch = async (id: string, values: { status?: string; payment_status?: string }) => {
     const { error } = await supabase.from("orders").update(values).eq("id", id);
     if (error) {
       toast.error(error.message);
