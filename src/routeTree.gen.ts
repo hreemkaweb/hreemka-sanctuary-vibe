@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as FounderRouteImport } from './routes/founder'
+import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
@@ -59,6 +60,11 @@ const CartRoute = CartRouteImport.update({
 const FounderRoute = FounderRouteImport.update({
   id: '/founder',
   path: '/founder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JourneyRoute = JourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/founder': typeof FounderRoute
+  '/journey': typeof JourneyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout': typeof AuthenticatedCheckoutRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/founder': typeof FounderRoute
+  '/journey': typeof JourneyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/founder': typeof FounderRoute
+  '/journey': typeof JourneyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/founder'
+    | '/journey'
     | '/account'
     | '/admin'
     | '/checkout'
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/founder'
+    | '/journey'
     | '/account'
     | '/checkout'
     | '/shop/$slug'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/founder'
+    | '/journey'
     | '/_authenticated/account'
     | '/_authenticated/admin'
     | '/_authenticated/checkout'
@@ -363,6 +375,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   FounderRoute: typeof FounderRoute
+  JourneyRoute: typeof JourneyRoute
   ShopSlugRoute: typeof ShopSlugRoute
   ShopIndexRoute: typeof ShopIndexRoute
   ApiPublicProductImageSplatRoute: typeof ApiPublicProductImageSplatRoute
@@ -403,6 +416,13 @@ declare module '@tanstack/react-router' {
       path: '/founder'
       fullPath: '/founder'
       preLoaderRoute: typeof FounderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journey': {
+      id: '/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof JourneyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/account': {
@@ -624,6 +644,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   FounderRoute: FounderRoute,
+  JourneyRoute: JourneyRoute,
   ShopSlugRoute: ShopSlugRoute,
   ShopIndexRoute: ShopIndexRoute,
   ApiPublicProductImageSplatRoute: ApiPublicProductImageSplatRoute,
