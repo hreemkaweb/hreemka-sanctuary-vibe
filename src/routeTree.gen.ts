@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BookRouteImport } from './routes/book'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -55,6 +56,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -224,6 +230,7 @@ const ApiPublicProductImageSplatRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/book': typeof BookRoute
   '/cart': typeof CartRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/book': typeof BookRoute
   '/cart': typeof CartRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
@@ -293,6 +301,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/book': typeof BookRoute
   '/cart': typeof CartRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/book'
     | '/cart'
     | '/events'
     | '/faq'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/book'
     | '/cart'
     | '/events'
     | '/faq'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/book'
     | '/cart'
     | '/events'
     | '/faq'
@@ -433,6 +445,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BookRoute: typeof BookRoute
   CartRoute: typeof CartRoute
   EventsRoute: typeof EventsRoute
   FaqRoute: typeof FaqRoute
@@ -467,6 +480,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -742,6 +762,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  BookRoute: BookRoute,
   CartRoute: CartRoute,
   EventsRoute: EventsRoute,
   FaqRoute: FaqRoute,
