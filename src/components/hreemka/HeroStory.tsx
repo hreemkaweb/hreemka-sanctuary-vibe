@@ -115,12 +115,12 @@ export function HeroStory() {
                   {scene.text}
                 </p>
                 <div className="mt-9 flex flex-wrap gap-3">
-                  <a href="#booking" className="btn-sacred">
+                  <Link to="/book" className="btn-sacred">
                     {scene.cta}
-                  </a>
-                  <a href="#services" className="btn-ghost-sacred text-primary-foreground">
+                  </Link>
+                  <Link to="/services" className="btn-ghost-sacred text-primary-foreground">
                     Healing modalities
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
