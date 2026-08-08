@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Mandala, Particles, Reveal, SectionHeading } from "./primitives";
 import founderImg from "@/assets/founder.jpg";
 
