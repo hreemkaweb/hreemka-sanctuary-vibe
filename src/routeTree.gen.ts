@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as FounderRouteImport } from './routes/founder'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as ProductsRouteImport } from './routes/products'
@@ -58,6 +59,11 @@ const AuthRoute = AuthRouteImport.update({
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FounderRoute = FounderRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
+  '/events': typeof EventsRoute
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
@@ -245,6 +252,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
+  '/events': typeof EventsRoute
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
@@ -278,6 +286,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
+  '/events': typeof EventsRoute
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
@@ -312,6 +321,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cart'
+    | '/events'
     | '/founder'
     | '/journey'
     | '/products'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cart'
+    | '/events'
     | '/founder'
     | '/journey'
     | '/products'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/cart'
+    | '/events'
     | '/founder'
     | '/journey'
     | '/products'
@@ -410,6 +422,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
+  EventsRoute: typeof EventsRoute
   FounderRoute: typeof FounderRoute
   JourneyRoute: typeof JourneyRoute
   ProductsRoute: typeof ProductsRoute
@@ -448,6 +461,13 @@ declare module '@tanstack/react-router' {
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/founder': {
@@ -703,6 +723,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
+  EventsRoute: EventsRoute,
   FounderRoute: FounderRoute,
   JourneyRoute: JourneyRoute,
   ProductsRoute: ProductsRoute,
