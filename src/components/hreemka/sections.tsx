@@ -82,18 +82,18 @@ export function Nav() {
 
           <div className="flex flex-col gap-4">
             {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
+              <Link
+                key={l.to}
+                to={l.to}
                 onClick={() => setOpen(false)}
                 className="text-xs tracking-[0.2em] uppercase text-foreground"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
-            <a href="#booking" onClick={() => setOpen(false)} className="btn-sacred mt-2">
+            <Link to="/book" onClick={() => setOpen(false)} className="btn-sacred mt-2">
               Book now
-            </a>
+            </Link>
           </div>
         </div>
       ) : null}
