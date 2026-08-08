@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as FounderRouteImport } from './routes/founder'
 import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -66,6 +67,11 @@ const FounderRoute = FounderRouteImport.update({
 const JourneyRoute = JourneyRouteImport.update({
   id: '/journey',
   path: '/journey',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -203,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
+  '/products': typeof ProductsRoute
   '/services': typeof ServicesRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -233,6 +240,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
+  '/products': typeof ProductsRoute
   '/services': typeof ServicesRoute
   '/account': typeof AuthenticatedAccountRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
@@ -264,6 +272,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
+  '/products': typeof ProductsRoute
   '/services': typeof ServicesRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/founder'
     | '/journey'
+    | '/products'
     | '/services'
     | '/account'
     | '/admin'
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/founder'
     | '/journey'
+    | '/products'
     | '/services'
     | '/account'
     | '/checkout'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/founder'
     | '/journey'
+    | '/products'
     | '/services'
     | '/_authenticated/account'
     | '/_authenticated/admin'
@@ -388,6 +400,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   FounderRoute: typeof FounderRoute
   JourneyRoute: typeof JourneyRoute
+  ProductsRoute: typeof ProductsRoute
   ServicesRoute: typeof ServicesRoute
   ShopSlugRoute: typeof ShopSlugRoute
   ShopIndexRoute: typeof ShopIndexRoute
@@ -436,6 +449,13 @@ declare module '@tanstack/react-router' {
       path: '/journey'
       fullPath: '/journey'
       preLoaderRoute: typeof JourneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -665,6 +685,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   FounderRoute: FounderRoute,
   JourneyRoute: JourneyRoute,
+  ProductsRoute: ProductsRoute,
   ServicesRoute: ServicesRoute,
   ShopSlugRoute: ShopSlugRoute,
   ShopIndexRoute: ShopIndexRoute,
