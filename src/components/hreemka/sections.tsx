@@ -8,14 +8,15 @@ const WHATSAPP = "https://wa.me/919000000000?text=Hi%20Hreemka%2C%20I%27d%20like
 /* ---------------------------------- Nav ---------------------------------- */
 
 const navLinks = [
-  { label: "Founder", href: "#founder" },
-  { label: "Journey", href: "#journey" },
-  { label: "Services", href: "#services" },
-  { label: "Products", href: "#products" },
-  { label: "Stories", href: "#stories" },
-  { label: "Events", href: "#events" },
-  { label: "FAQ", href: "#faq" },
-];
+  { label: "Founder", to: "/founder" },
+  { label: "Journey", to: "/journey" },
+  { label: "Services", to: "/services" },
+  { label: "Products", to: "/products" },
+  { label: "Stories", to: "/stories" },
+  { label: "Events", to: "/events" },
+  { label: "FAQ", to: "/faq" },
+] as const;
+
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
