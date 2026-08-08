@@ -629,10 +629,10 @@ export function Footer() {
           <p className="eyebrow">Explore</p>
           <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
             {navLinks.map((l) => (
-              <li key={l.href}>
-                <a href={l.href} className="transition-opacity hover:opacity-60">
+              <li key={l.to}>
+                <Link to={l.to} className="transition-opacity hover:opacity-60">
                   {l.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
