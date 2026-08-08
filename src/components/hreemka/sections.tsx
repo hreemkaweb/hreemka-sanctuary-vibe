@@ -278,12 +278,12 @@ export function Services() {
               <article className="liquid-glass card-liquid flex h-full flex-col p-8">
                 <h3 className="text-2xl">{title}</h3>
                 <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{text}</p>
-                <a
-                  href="#booking"
+                <Link
+                  to="/book"
                   className="mt-7 text-xs tracking-[0.2em] uppercase text-primary transition-opacity hover:opacity-60"
                 >
                   Book now →
-                </a>
+                </Link>
               </article>
             </Reveal>
           ))}
