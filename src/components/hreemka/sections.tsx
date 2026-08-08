@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Mandala, Particles, Reveal, SectionHeading } from "./primitives";
 import founderImg from "@/assets/founder.jpg";
 
@@ -8,25 +8,32 @@ const WHATSAPP = "https://wa.me/919000000000?text=Hi%20Hreemka%2C%20I%27d%20like
 /* ---------------------------------- Nav ---------------------------------- */
 
 const navLinks = [
-  { label: "Founder", href: "#founder" },
-  { label: "Journey", href: "#journey" },
-  { label: "Services", href: "#services" },
-  { label: "Products", href: "#products" },
-  { label: "Stories", href: "#stories" },
-  { label: "Events", href: "#events" },
-  { label: "FAQ", href: "#faq" },
-];
+  { label: "Founder", to: "/founder" },
+  { label: "Journey", to: "/journey" },
+  { label: "Services", to: "/services" },
+  { label: "Products", to: "/products" },
+  { label: "Stories", to: "/stories" },
+  { label: "Events", to: "/events" },
+  { label: "FAQ", to: "/faq" },
+] as const;
+
 
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onHome = pathname === "/";
+  const [atTop, setAtTop] = useState(true);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setAtTop(window.scrollY <= 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Only the home page has a dark cinematic hero behind the nav.
+  const scrolled = !onHome || !atTop;
+
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
@@ -36,31 +43,32 @@ export function Nav() {
         }`}
       >
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 sm:px-7">
-          <a
-            href="#top"
+          <Link
+            to="/"
             className={`min-w-0 font-display text-2xl tracking-[0.28em] uppercase transition-colors ${
               scrolled ? "text-foreground" : "text-primary-foreground"
             }`}
           >
             Hreemka
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-8 lg:flex">
             {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
+              <Link
+                key={l.to}
+                to={l.to}
                 className={`text-xs tracking-[0.18em] uppercase transition-opacity hover:opacity-60 ${
                   scrolled ? "text-foreground" : "text-primary-foreground"
                 }`}
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
-            <a href="#booking" className="btn-sacred !px-6 !py-3">
+            <Link to="/book" className="btn-sacred !px-6 !py-3">
               Book now
-            </a>
+            </Link>
           </nav>
+
 
           <button
             type="button"
@@ -80,18 +88,18 @@ export function Nav() {
 
           <div className="flex flex-col gap-4">
             {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
+              <Link
+                key={l.to}
+                to={l.to}
                 onClick={() => setOpen(false)}
                 className="text-xs tracking-[0.2em] uppercase text-foreground"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
-            <a href="#booking" onClick={() => setOpen(false)} className="btn-sacred mt-2">
+            <Link to="/book" onClick={() => setOpen(false)} className="btn-sacred mt-2">
               Book now
-            </a>
+            </Link>
           </div>
         </div>
       ) : null}
@@ -276,12 +284,12 @@ export function Services() {
               <article className="liquid-glass card-liquid flex h-full flex-col p-8">
                 <h3 className="text-2xl">{title}</h3>
                 <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{text}</p>
-                <a
-                  href="#booking"
+                <Link
+                  to="/book"
                   className="mt-7 text-xs tracking-[0.2em] uppercase text-primary transition-opacity hover:opacity-60"
                 >
                   Book now →
-                </a>
+                </Link>
               </article>
             </Reveal>
           ))}
@@ -627,10 +635,10 @@ export function Footer() {
           <p className="eyebrow">Explore</p>
           <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
             {navLinks.map((l) => (
-              <li key={l.href}>
-                <a href={l.href} className="transition-opacity hover:opacity-60">
+              <li key={l.to}>
+                <Link to={l.to} className="transition-opacity hover:opacity-60">
                   {l.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
