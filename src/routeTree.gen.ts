@@ -17,6 +17,7 @@ import { Route as FounderRouteImport } from './routes/founder'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
@@ -77,6 +78,11 @@ const ProductsRoute = ProductsRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoriesRoute = StoriesRouteImport.update({
+  id: '/stories',
+  path: '/stories',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
   '/services': typeof ServicesRoute
+  '/stories': typeof StoriesRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout': typeof AuthenticatedCheckoutRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
   '/services': typeof ServicesRoute
+  '/stories': typeof StoriesRoute
   '/account': typeof AuthenticatedAccountRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
   '/services': typeof ServicesRoute
+  '/stories': typeof StoriesRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/products'
     | '/services'
+    | '/stories'
     | '/account'
     | '/admin'
     | '/checkout'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/products'
     | '/services'
+    | '/stories'
     | '/account'
     | '/checkout'
     | '/shop/$slug'
@@ -369,6 +380,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/products'
     | '/services'
+    | '/stories'
     | '/_authenticated/account'
     | '/_authenticated/admin'
     | '/_authenticated/checkout'
@@ -402,6 +414,7 @@ export interface RootRouteChildren {
   JourneyRoute: typeof JourneyRoute
   ProductsRoute: typeof ProductsRoute
   ServicesRoute: typeof ServicesRoute
+  StoriesRoute: typeof StoriesRoute
   ShopSlugRoute: typeof ShopSlugRoute
   ShopIndexRoute: typeof ShopIndexRoute
   ApiPublicProductImageSplatRoute: typeof ApiPublicProductImageSplatRoute
@@ -463,6 +476,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stories': {
+      id: '/stories'
+      path: '/stories'
+      fullPath: '/stories'
+      preLoaderRoute: typeof StoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/account': {
@@ -687,6 +707,7 @@ const rootRouteChildren: RootRouteChildren = {
   JourneyRoute: JourneyRoute,
   ProductsRoute: ProductsRoute,
   ServicesRoute: ServicesRoute,
+  StoriesRoute: StoriesRoute,
   ShopSlugRoute: ShopSlugRoute,
   ShopIndexRoute: ShopIndexRoute,
   ApiPublicProductImageSplatRoute: ApiPublicProductImageSplatRoute,
