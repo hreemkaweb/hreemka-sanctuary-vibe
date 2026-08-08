@@ -37,31 +37,32 @@ export function Nav() {
         }`}
       >
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 sm:px-7">
-          <a
-            href="#top"
+          <Link
+            to="/"
             className={`min-w-0 font-display text-2xl tracking-[0.28em] uppercase transition-colors ${
               scrolled ? "text-foreground" : "text-primary-foreground"
             }`}
           >
             Hreemka
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-8 lg:flex">
             {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
+              <Link
+                key={l.to}
+                to={l.to}
                 className={`text-xs tracking-[0.18em] uppercase transition-opacity hover:opacity-60 ${
                   scrolled ? "text-foreground" : "text-primary-foreground"
                 }`}
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
-            <a href="#booking" className="btn-sacred !px-6 !py-3">
+            <Link to="/book" className="btn-sacred !px-6 !py-3">
               Book now
-            </a>
+            </Link>
           </nav>
+
 
           <button
             type="button"
