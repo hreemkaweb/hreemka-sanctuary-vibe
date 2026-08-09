@@ -139,6 +139,8 @@ export type Database = {
           phone: string
           preferred_date: string | null
           preferred_time: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
           service: string
           status: string
           updated_at: string
@@ -157,6 +159,8 @@ export type Database = {
           phone?: string
           preferred_date?: string | null
           preferred_time?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           service?: string
           status?: string
           updated_at?: string
@@ -175,6 +179,8 @@ export type Database = {
           phone?: string
           preferred_date?: string | null
           preferred_time?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           service?: string
           status?: string
           updated_at?: string
@@ -184,6 +190,7 @@ export type Database = {
       }
       event_registrations: {
         Row: {
+          amount_cents: number
           created_at: string
           email: string
           event_id: string
@@ -191,12 +198,15 @@ export type Database = {
           name: string
           payment_status: string
           phone: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
           seats: number
           status: string
           updated_at: string
           user_id: string | null
         }
         Insert: {
+          amount_cents?: number
           created_at?: string
           email: string
           event_id: string
@@ -204,12 +214,15 @@ export type Database = {
           name: string
           payment_status?: string
           phone?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           seats?: number
           status?: string
           updated_at?: string
           user_id?: string | null
         }
         Update: {
+          amount_cents?: number
           created_at?: string
           email?: string
           event_id?: string
@@ -217,6 +230,8 @@ export type Database = {
           name?: string
           payment_status?: string
           phone?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           seats?: number
           status?: string
           updated_at?: string
@@ -437,17 +452,21 @@ export type Database = {
         Row: {
           created_at: string
           currency: string
+          customer_email: string
           id: string
           notes: string | null
           order_number: string
           payment_ref: string | null
           payment_status: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
           shipping_address: string
           shipping_cents: number
           shipping_city: string
           shipping_name: string
           shipping_phone: string
           shipping_postcode: string
+          shipping_state: string
           status: string
           subtotal_cents: number
           total_cents: number
@@ -457,17 +476,21 @@ export type Database = {
         Insert: {
           created_at?: string
           currency?: string
+          customer_email?: string
           id?: string
           notes?: string | null
           order_number?: string
           payment_ref?: string | null
           payment_status?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           shipping_address?: string
           shipping_cents?: number
           shipping_city?: string
           shipping_name?: string
           shipping_phone?: string
           shipping_postcode?: string
+          shipping_state?: string
           status?: string
           subtotal_cents?: number
           total_cents?: number
@@ -477,17 +500,21 @@ export type Database = {
         Update: {
           created_at?: string
           currency?: string
+          customer_email?: string
           id?: string
           notes?: string | null
           order_number?: string
           payment_ref?: string | null
           payment_status?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           shipping_address?: string
           shipping_cents?: number
           shipping_city?: string
           shipping_name?: string
           shipping_phone?: string
           shipping_postcode?: string
+          shipping_state?: string
           status?: string
           subtotal_cents?: number
           total_cents?: number
@@ -502,11 +529,17 @@ export type Database = {
           booking_id: string | null
           created_at: string
           currency: string
+          customer_email: string
+          customer_name: string
           id: string
+          kind: string
           meta: Json
           order_id: string | null
           provider: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
           refund_status: string
+          registration_id: string | null
           status: string
           transaction_ref: string | null
           updated_at: string
@@ -517,11 +550,17 @@ export type Database = {
           booking_id?: string | null
           created_at?: string
           currency?: string
+          customer_email?: string
+          customer_name?: string
           id?: string
+          kind?: string
           meta?: Json
           order_id?: string | null
           provider?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           refund_status?: string
+          registration_id?: string | null
           status?: string
           transaction_ref?: string | null
           updated_at?: string
@@ -532,11 +571,17 @@ export type Database = {
           booking_id?: string | null
           created_at?: string
           currency?: string
+          customer_email?: string
+          customer_name?: string
           id?: string
+          kind?: string
           meta?: Json
           order_id?: string | null
           provider?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           refund_status?: string
+          registration_id?: string | null
           status?: string
           transaction_ref?: string | null
           updated_at?: string
@@ -555,6 +600,13 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "event_registrations"
             referencedColumns: ["id"]
           },
         ]
