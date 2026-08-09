@@ -43,7 +43,8 @@ export async function runCheckout(
   options: { description: string },
 ): Promise<CheckoutResult> {
   await loadScript();
-  if (!window.Razorpay) throw new Error("Payment window failed to load.");
+  const RazorpayCtor = window.Razorpay;
+  if (!RazorpayCtor) throw new Error("Payment window failed to load.");
 
   return new Promise<CheckoutResult>((resolve) => {
     let settled = false;
@@ -53,7 +54,7 @@ export async function runCheckout(
       resolve(result);
     };
 
-    const rzp = new window.Razorpay({
+    const rzp = new RazorpayCtor({
       key: session.keyId,
       amount: session.amountCents,
       currency: session.currency,
@@ -93,14 +94,16 @@ export async function runCheckout(
                 signature: response.razorpay_signature,
               },
             });
-            finish({
-              status: verified.status,
-              recordId: verified.recordId,
-              message:
-                verified.status === "successful"
-                  ? undefined
-                  : "We could not confirm this payment. Nothing has been charged to your order.",
-            });
+            finish(
+              verified.status === "successful"
+                ? { status: "successful", recordId: verified.recordId }
+                : {
+                    status: "failed",
+                    recordId: verified.recordId,
+                    message:
+                      "We could not confirm this payment. Nothing has been charged to your order.",
+                  },
+            );
           } catch {
             finish({
               status: "processing",

@@ -459,7 +459,7 @@ async function settle(
       status,
       transaction_ref: providerPaymentId,
       razorpay_payment_id: providerPaymentId,
-      meta: reason ? { ...meta, reason } : meta,
+      meta: (reason ? { ...meta, reason } : meta) as never,
     })
     .eq("id", row.id);
 
