@@ -2,10 +2,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
 import { ShopShell } from "@/components/shop/ShopShell";
 import { useCart } from "@/lib/cart";
 import { formatPrice, FREE_SHIPPING_OVER_CENTS, SHIPPING_CENTS } from "@/lib/shop";
+import { createProductCheckout } from "@/lib/payments/payments.functions";
+import { runCheckout } from "@/lib/payments/checkout";
 
 const title = "Checkout — Hreemka";
 const description = "Complete your Hreemka order securely.";
@@ -26,9 +27,11 @@ export const Route = createFileRoute("/_authenticated/checkout")({
 
 const schema = z.object({
   shipping_name: z.string().trim().min(2, "Please enter your name").max(100),
+  shipping_email: z.string().trim().email("Please enter a valid email").max(255),
   shipping_phone: z.string().trim().min(6, "Please enter a phone number").max(20),
   shipping_address: z.string().trim().min(6, "Please enter your address").max(300),
   shipping_city: z.string().trim().min(2, "Please enter your city").max(80),
+  shipping_state: z.string().trim().min(2, "Please enter your state").max(80),
   shipping_postcode: z.string().trim().min(3, "Please enter a postcode").max(20),
   notes: z.string().trim().max(500).optional(),
 });
@@ -55,45 +58,39 @@ function CheckoutPage() {
 
     setBusy(true);
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      const userId = userData.user?.id;
-      if (!userId) throw new Error("Please sign in again");
+      const session = await createProductCheckout({
+        data: {
+          customer: {
+            name: parsed.data.shipping_name,
+            email: parsed.data.shipping_email,
+            phone: parsed.data.shipping_phone,
+          },
+          shipping: {
+            address: parsed.data.shipping_address,
+            city: parsed.data.shipping_city,
+            state: parsed.data.shipping_state,
+            postcode: parsed.data.shipping_postcode,
+          },
+          ...(parsed.data.notes ? { notes: parsed.data.notes } : {}),
+          items: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })),
+        },
+      });
 
-      const { data: order, error } = await supabase
-        .from("orders")
-        .insert({
-          user_id: userId,
-          subtotal_cents: subtotalCents,
-          shipping_cents: shipping,
-          total_cents: total,
-          shipping_name: parsed.data.shipping_name,
-          shipping_phone: parsed.data.shipping_phone,
-          shipping_address: parsed.data.shipping_address,
-          shipping_city: parsed.data.shipping_city,
-          shipping_postcode: parsed.data.shipping_postcode,
-          notes: parsed.data.notes ?? null,
-        })
-        .select("id, order_number")
-        .single();
-      if (error) throw error;
+      const result = await runCheckout(session, { description: `Order ${session.recordLabel}` });
 
-      const { error: itemsError } = await supabase.from("order_items").insert(
-        lines.map((l) => ({
-          order_id: order.id,
-          product_id: l.productId,
-          product_name: l.name,
-          unit_price_cents: l.priceCents,
-          quantity: l.quantity,
-          image_url: l.image,
-        })),
-      );
-      if (itemsError) throw itemsError;
+      if (result.status === "successful") {
+        clear();
+        toast.success(`Payment received — order ${session.recordLabel} confirmed`);
+      } else if (result.status === "processing") {
+        clear();
+        toast.message(result.message ?? "We are confirming your payment.");
+      } else {
+        toast.error(result.message ?? "Payment was not completed.");
+      }
 
-      clear();
-      toast.success(`Order ${order.order_number} placed`);
-      void navigate({ to: "/orders/$id", params: { id: order.id } });
+      void navigate({ to: "/orders/$id", params: { id: session.recordId } });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not place the order");
+      toast.error(err instanceof Error ? err.message : "Could not start the payment");
     } finally {
       setBusy(false);
     }
@@ -116,15 +113,25 @@ function CheckoutPage() {
       <form onSubmit={submit} className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="liquid-glass card-liquid space-y-4 p-7">
           <input name="shipping_name" className="glass-field" placeholder="Full name" required />
-          <input name="shipping_phone" className="glass-field" placeholder="Phone" required />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <input
+              name="shipping_email"
+              type="email"
+              className="glass-field"
+              placeholder="Email"
+              required
+            />
+            <input name="shipping_phone" className="glass-field" placeholder="Phone" required />
+          </div>
           <textarea
             name="shipping_address"
             className="glass-field min-h-24"
             placeholder="Address"
             required
           />
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-3">
             <input name="shipping_city" className="glass-field" placeholder="City" required />
+            <input name="shipping_state" className="glass-field" placeholder="State" required />
             <input name="shipping_postcode" className="glass-field" placeholder="Postcode" required />
           </div>
           <textarea name="notes" className="glass-field min-h-20" placeholder="Notes (optional)" />
@@ -151,8 +158,11 @@ function CheckoutPage() {
             </div>
           </div>
           <button type="submit" disabled={busy} className="btn-sacred w-full disabled:opacity-60">
-            {busy ? "Placing order…" : "Place order"}
+            {busy ? "Opening secure payment…" : "Pay securely"}
           </button>
+          <p className="text-center text-xs text-muted-foreground">
+            Payments are processed securely by Razorpay. Cards, UPI, netbanking and wallets accepted.
+          </p>
         </aside>
       </form>
     </ShopShell>
