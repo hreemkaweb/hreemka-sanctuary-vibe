@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Mandala, Particles, Reveal, SectionHeading } from "./primitives";
+import { createConsultationCheckout } from "@/lib/payments/payments.functions";
+import { runCheckout } from "@/lib/payments/checkout";
 import founderImg from "@/assets/founder.jpg";
 
 const WHATSAPP = "https://wa.me/919000000000?text=Hi%20Hreemka%2C%20I%27d%20like%20to%20book%20a%20consultation";
@@ -519,6 +522,40 @@ export function FAQ() {
 
 export function Booking() {
   const [submitted, setSubmitted] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const value = (k: string) => String(form.get(k) ?? "").trim();
+    setBusy(true);
+    try {
+      const session = await createConsultationCheckout({
+        data: {
+          customer: { name: value("name"), email: value("email"), phone: value("phone") },
+          service: value("service"),
+          consultationType: value("mode"),
+          preferredDate: value("date"),
+          preferredTime: value("time"),
+          message: value("message"),
+        },
+      });
+      const result = await runCheckout(session, { description: session.recordLabel });
+      if (result.status === "successful") {
+        setSubmitted(true);
+        toast.success("Payment received — your session is confirmed.");
+      } else if (result.status === "processing") {
+        setSubmitted(true);
+        toast.message(result.message ?? "We are confirming your payment.");
+      } else {
+        toast.error(result.message ?? "Payment was not completed.");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not start the payment");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <section id="booking" className="relative overflow-hidden py-28 sm:py-36">
@@ -528,25 +565,25 @@ export function Booking() {
         <SectionHeading
           eyebrow="Book a consultation"
           title="Your first conversation begins here"
-          subtitle="Share a few details and we will confirm your session personally, usually within a day."
+          subtitle="Share a few details, pay securely, and your session is confirmed straight away."
         />
 
         <Reveal delay={120}>
           <form
             className="liquid-glass liquid-glass-strong mt-14 grid gap-5 rounded-[2rem] p-8 sm:grid-cols-2 sm:p-10"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSubmitted(true);
-            }}
+            onSubmit={submit}
           >
             <Field label="Your name">
-              <input required maxLength={100} className="field" placeholder="Full name" />
+              <input name="name" required maxLength={100} className="field" placeholder="Full name" />
             </Field>
-            <Field label="Email or phone">
-              <input required maxLength={120} className="field" placeholder="How we reach you" />
+            <Field label="Email">
+              <input name="email" type="email" required maxLength={255} className="field" placeholder="you@email.com" />
+            </Field>
+            <Field label="Phone">
+              <input name="phone" required maxLength={20} className="field" placeholder="Mobile number" />
             </Field>
             <Field label="Service">
-              <select required className="field" defaultValue="">
+              <select name="service" required className="field" defaultValue="">
                 <option value="" disabled>
                   Select a service
                 </option>
@@ -558,20 +595,20 @@ export function Booking() {
               </select>
             </Field>
             <Field label="Mode">
-              <select required className="field" defaultValue="Online">
+              <select name="mode" required className="field" defaultValue="Online">
                 <option>Online</option>
                 <option>In person</option>
               </select>
             </Field>
             <Field label="Preferred date">
-              <input required type="date" className="field" />
+              <input name="date" required type="date" className="field" />
             </Field>
             <Field label="Preferred time">
-              <input required type="time" className="field" />
+              <input name="time" required type="time" className="field" />
             </Field>
             <div className="sm:col-span-2">
               <Field label="What would you like guidance on?">
-                <textarea rows={4} maxLength={1000} className="field resize-none" placeholder="Share as much or as little as you wish" />
+                <textarea name="message" rows={4} maxLength={1000} className="field resize-none" placeholder="Share as much or as little as you wish" />
               </Field>
             </div>
             <label className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground sm:col-span-2">
@@ -582,16 +619,15 @@ export function Booking() {
               </span>
             </label>
             <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
-
-              <button type="submit" className="btn-sacred">
-                Request my session
+              <button type="submit" disabled={busy} className="btn-sacred disabled:opacity-60">
+                {busy ? "Opening secure payment…" : "Pay & confirm my session"}
               </button>
               <a href={WHATSAPP} target="_blank" rel="noreferrer" className="btn-ghost-sacred">
                 Chat on WhatsApp
               </a>
               {submitted ? (
                 <p className="text-sm text-primary">
-                  Thank you — your request is received. We will confirm shortly.
+                  Thank you — your session is confirmed. We will be in touch shortly.
                 </p>
               ) : null}
             </div>
