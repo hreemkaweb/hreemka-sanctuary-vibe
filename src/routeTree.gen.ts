@@ -19,6 +19,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as FounderRouteImport } from './routes/founder'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
@@ -91,6 +92,11 @@ const JourneyRoute = JourneyRouteImport.update({
 const ProductsRoute = ProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -237,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/stories': typeof StoriesRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/stories': typeof StoriesRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -308,6 +316,7 @@ export interface FileRoutesById {
   '/founder': typeof FounderRoute
   '/journey': typeof JourneyRoute
   '/products': typeof ProductsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/stories': typeof StoriesRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
@@ -345,6 +354,7 @@ export interface FileRouteTypes {
     | '/founder'
     | '/journey'
     | '/products'
+    | '/reset-password'
     | '/services'
     | '/stories'
     | '/account'
@@ -380,6 +390,7 @@ export interface FileRouteTypes {
     | '/founder'
     | '/journey'
     | '/products'
+    | '/reset-password'
     | '/services'
     | '/stories'
     | '/account'
@@ -415,6 +426,7 @@ export interface FileRouteTypes {
     | '/founder'
     | '/journey'
     | '/products'
+    | '/reset-password'
     | '/services'
     | '/stories'
     | '/_authenticated/account'
@@ -452,6 +464,7 @@ export interface RootRouteChildren {
   FounderRoute: typeof FounderRoute
   JourneyRoute: typeof JourneyRoute
   ProductsRoute: typeof ProductsRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ServicesRoute: typeof ServicesRoute
   StoriesRoute: typeof StoriesRoute
   ShopSlugRoute: typeof ShopSlugRoute
@@ -529,6 +542,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -769,6 +789,7 @@ const rootRouteChildren: RootRouteChildren = {
   FounderRoute: FounderRoute,
   JourneyRoute: JourneyRoute,
   ProductsRoute: ProductsRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ServicesRoute: ServicesRoute,
   StoriesRoute: StoriesRoute,
   ShopSlugRoute: ShopSlugRoute,

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { ShopShell } from "@/components/shop/ShopShell";
 
 const title = "Sign in — Hreemka";
@@ -44,8 +43,27 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const handleForgotPassword = async () => {
+  if (!email) {
+    alert("Please enter your email address first.");
+    return;
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Password reset link has been sent to your email.");
+};
 
   useEffect(() => {
+    if (window.location.pathname === "/reset-password") return;
+    
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session) void navigate({ to: destination, replace: true });
     });
@@ -83,18 +101,19 @@ function AuthPage() {
       setBusy(false);
     }
   };
+const google = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.origin,
+    },
+  });
 
-  const google = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      toast.error("Google sign-in failed. Please try again.");
-      return;
-    }
-    if (result.redirected) return;
-    void navigate({ to: destination, replace: true });
-  };
+  if (error) {
+    toast.error(error.message);
+    return;
+  }
+};
 
   return (
     <ShopShell
@@ -146,6 +165,15 @@ function AuthPage() {
                 minLength={6}
                 required
               />
+              {mode === "signin" && (
+               <button
+              type="button"
+              onClick={handleForgotPassword}
+               className="mt-3 text-sm text-primary hover:underline"
+             >
+               Forgot password?
+             </button>
+               )}
               <button type="submit" disabled={busy} className="btn-sacred w-full disabled:opacity-60">
                 {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
               </button>
