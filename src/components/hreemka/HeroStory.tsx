@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import hero1 from "@/assets/hero-1.png.asset.json";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
-import hero4 from "@/assets/hero-4.jpg";
 import hero5 from "@/assets/hero-5.jpg";
 
 const scenes = [
   {
-    image: hero1.url,
+    image: "/hero.png",
     eyebrow: "Scene One",
     title: "Find Clarity in Life",
     text: "When the noise quiets, the answer was always yours. Begin with a conversation that finally makes sense of where you are.",
@@ -29,7 +27,7 @@ const scenes = [
     cta: "Explore the practices",
   },
   {
-    image: hero4,
+    image: "/scene-4.jpeg",
     eyebrow: "Scene Four",
     title: "Transform Through Personalized Guidance",
     text: "No templates, no fear. A healing path shaped entirely around your story, your energy and your season of life.",
@@ -46,6 +44,7 @@ const scenes = [
 
 export function HeroStory() {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const sceneFiveVideoRef = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -68,27 +67,81 @@ export function HeroStory() {
     };
   }, []);
 
+  useEffect(() => {
+    const video = sceneFiveVideoRef.current;
+    if (!video) return;
+
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPlayback = () => {
+      if (active === 4 && !motionQuery.matches) {
+        void video.play().catch(() => undefined);
+      } else {
+        video.pause();
+      }
+    };
+
+    syncPlayback();
+    motionQuery.addEventListener("change", syncPlayback);
+    return () => {
+      motionQuery.removeEventListener("change", syncPlayback);
+      video.pause();
+    };
+  }, [active]);
+
   return (
     <div ref={wrapRef} className="relative" style={{ height: "500vh" }}>
       <section className="sticky top-0 flex h-screen items-center overflow-hidden">
         {scenes.map((scene, i) => (
-          <img
+          <div
             key={scene.title}
-            src={scene.image}
-            alt={scene.title}
-            width={1920}
-            height={1200}
-            loading={i === 0 ? "eager" : "lazy"}
-            className={`absolute inset-0 h-full w-full object-cover transition-all duration-[1400ms] ease-out ${
-              i === 0
-                ? "object-[92%_center] sm:object-[88%_center] md:object-[82%_center] lg:object-[78%_center] xl:object-[72%_center]"
-                : "object-center"
+            className={`hero-scene absolute inset-0 transition-all duration-[1400ms] ease-out ${
+              i === 0 ? "hero-scene-one" : i === 4 ? "hero-scene-five" : ""
             }`}
             style={{
+              backgroundImage: `url(${scene.image})`,
               opacity: active === i ? 1 : 0,
               transform: `scale(${active === i ? 1.04 : 1.14})`,
             }}
-          />
+          >
+            {i === 4 && (
+              <video
+                ref={sceneFiveVideoRef}
+                className="hero-scene-video"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster={scene.image}
+                aria-hidden="true"
+              >
+                <source src="/C2104.mp4" type="video/mp4" />
+              </video>
+            )}
+            {i === 0 && (
+              <div className="hero-scene-fallback" aria-hidden="true">
+                <div className="hero-scene-fallback-mark">
+                  <span />
+                  <i />
+                </div>
+                <p>Hreemka</p>
+                <small>Your Sacred Healing Space</small>
+              </div>
+            )}
+            {i !== 4 && (
+              <img
+                src={scene.image}
+                alt={scene.title}
+                width={1920}
+                height={1200}
+                loading={i === 0 ? "eager" : "lazy"}
+                className="hero-scene-art h-full w-full object-cover"
+                onError={(event) => {
+                  event.currentTarget.hidden = true;
+                }}
+              />
+            )}
+          </div>
         ))}
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 via-foreground/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
