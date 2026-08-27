@@ -26,7 +26,10 @@ function CartPage() {
     lines.length === 0 || subtotalCents >= FREE_SHIPPING_OVER_CENTS ? 0 : SHIPPING_CENTS;
 
   return (
-    <ShopShell title="Your cart" subtitle="Everything here is cleansed and charged before dispatch.">
+    <ShopShell
+      title="Your cart"
+      subtitle="Everything here is cleansed and charged before dispatch."
+    >
       {lines.length === 0 ? (
         <div className="text-center">
           <p className="mb-8 text-sm text-muted-foreground">Your cart is still empty.</p>
@@ -57,11 +60,17 @@ function CartPage() {
                     <h2 className="truncate text-lg">{l.name}</h2>
                     <p className="text-sm text-muted-foreground">{formatPrice(l.priceCents)}</p>
                     <div className="mt-2 flex items-center gap-3">
-                      <button type="button" onClick={() => setQuantity(l.productId, l.quantity - 1)}>
+                      <button
+                        type="button"
+                        onClick={() => setQuantity(l.productId, l.quantity - 1)}
+                      >
                         −
                       </button>
                       <span className="text-sm">{l.quantity}</span>
-                      <button type="button" onClick={() => setQuantity(l.productId, l.quantity + 1)}>
+                      <button
+                        type="button"
+                        onClick={() => setQuantity(l.productId, l.quantity + 1)}
+                      >
                         +
                       </button>
                       <button

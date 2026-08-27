@@ -23,8 +23,20 @@ type Counts = {
   customers: number;
   events: number;
   revenueCents: number;
-  recentOrders: { id: string; order_number: string; total_cents: number; status: string; created_at: string }[];
-  recentBookings: { id: string; customer_name: string; service: string; status: string; created_at: string }[];
+  recentOrders: {
+    id: string;
+    order_number: string;
+    total_cents: number;
+    status: string;
+    created_at: string;
+  }[];
+  recentBookings: {
+    id: string;
+    customer_name: string;
+    service: string;
+    status: string;
+    created_at: string;
+  }[];
   activity: { id: string; title: string; message: string; created_at: string }[];
   revenueByDay: { day: string; total: number }[];
 };
@@ -96,7 +108,12 @@ function AdminDashboard() {
   const stats = [
     { label: "Products", value: data?.products ?? 0, icon: Package, to: "/admin/products" },
     { label: "Orders", value: data?.orders ?? 0, icon: ShoppingBag, to: "/admin/orders" },
-    { label: "Consultations", value: data?.bookings ?? 0, icon: CalendarHeart, to: "/admin/bookings" },
+    {
+      label: "Consultations",
+      value: data?.bookings ?? 0,
+      icon: CalendarHeart,
+      to: "/admin/bookings",
+    },
     { label: "Customers", value: data?.customers ?? 0, icon: Users, to: "/admin/customers" },
     { label: "Events", value: data?.events ?? 0, icon: CalendarDays, to: "/admin/events" },
     {

@@ -189,7 +189,11 @@ function AdminProducts() {
             </option>
           ))}
         </select>
-        <button type="button" className="btn-sacred ml-auto" onClick={() => setDraft({ ...emptyDraft })}>
+        <button
+          type="button"
+          className="btn-sacred ml-auto"
+          onClick={() => setDraft({ ...emptyDraft })}
+        >
           Add product
         </button>
       </div>
@@ -275,11 +279,20 @@ function AdminProducts() {
             <p className="eyebrow mb-3">Images</p>
             <div className="flex flex-wrap items-center gap-3">
               {draft.images.map((img) => (
-                <div key={img} className="relative h-20 w-20 overflow-hidden rounded-xl bg-secondary">
-                  <img src={productImageUrl(img) ?? ""} alt="" className="h-full w-full object-cover" />
+                <div
+                  key={img}
+                  className="relative h-20 w-20 overflow-hidden rounded-xl bg-secondary"
+                >
+                  <img
+                    src={productImageUrl(img) ?? ""}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
                   <button
                     type="button"
-                    onClick={() => setDraft({ ...draft, images: draft.images.filter((i) => i !== img) })}
+                    onClick={() =>
+                      setDraft({ ...draft, images: draft.images.filter((i) => i !== img) })
+                    }
                     className="absolute top-1 right-1 rounded-full bg-background/80 px-1.5 text-xs"
                     aria-label="Remove image"
                   >
@@ -304,7 +317,12 @@ function AdminProducts() {
           </div>
 
           <div className="flex gap-3">
-            <button type="button" onClick={save} disabled={saving} className="btn-sacred disabled:opacity-60">
+            <button
+              type="button"
+              onClick={save}
+              disabled={saving}
+              className="btn-sacred disabled:opacity-60"
+            >
               {saving ? "Saving…" : "Save product"}
             </button>
             <button type="button" onClick={() => setDraft(null)} className="btn-ghost-sacred">
@@ -318,9 +336,19 @@ function AdminProducts() {
         {filtered.map((p) => {
           const image = productImageUrl(p.images[0]);
           return (
-            <article key={p.id} className="liquid-glass card-liquid flex flex-wrap items-center gap-5 p-5">
+            <article
+              key={p.id}
+              className="liquid-glass card-liquid flex flex-wrap items-center gap-5 p-5"
+            >
               <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-secondary">
-                {image ? <img src={image} alt={p.name} loading="lazy" className="h-full w-full object-cover" /> : null}
+                {image ? (
+                  <img
+                    src={image}
+                    alt={p.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                ) : null}
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="truncate text-lg">{p.name}</h3>
@@ -345,7 +373,11 @@ function AdminProducts() {
               >
                 {p.active ? "Deactivate" : "Activate"}
               </button>
-              <button type="button" onClick={() => startEdit(p)} className="text-xs tracking-[0.16em] uppercase text-primary">
+              <button
+                type="button"
+                onClick={() => startEdit(p)}
+                className="text-xs tracking-[0.16em] uppercase text-primary"
+              >
                 Edit
               </button>
               <button
@@ -358,7 +390,9 @@ function AdminProducts() {
             </article>
           );
         })}
-        {filtered.length === 0 ? <p className="text-sm text-muted-foreground">No products match.</p> : null}
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No products match.</p>
+        ) : null}
       </div>
     </AdminShell>
   );

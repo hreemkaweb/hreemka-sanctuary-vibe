@@ -53,7 +53,11 @@ function AdminOrders() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <select className="glass-field !w-auto" value={status} onChange={(e) => setStatus(e.target.value)}>
+        <select
+          className="glass-field !w-auto"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+        >
           {["All", ...ORDER_STATUSES].map((s) => (
             <option key={s} value={s}>
               {s}
@@ -111,7 +115,9 @@ function AdminOrders() {
             </ul>
           </article>
         ))}
-        {filtered.length === 0 ? <p className="text-sm text-muted-foreground">No orders found.</p> : null}
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No orders found.</p>
+        ) : null}
       </div>
     </AdminShell>
   );

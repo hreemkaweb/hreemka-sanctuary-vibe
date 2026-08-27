@@ -8,7 +8,9 @@ export const Route = createFileRoute("/_authenticated/admin/blogs")({
       <CrudManager
         table="blogs"
         titleKey="title"
-        subtitle={(r) => `${String(r["category"] || "General")} · ${r["published"] ? "published" : "draft"}`}
+        subtitle={(r) =>
+          `${String(r["category"] || "General")} · ${r["published"] ? "published" : "draft"}`
+        }
         searchKeys={["title", "excerpt", "category"]}
         orderBy={{ column: "created_at", ascending: false }}
         extraInvalidate={["site-blogs"]}

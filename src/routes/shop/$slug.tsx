@@ -102,7 +102,11 @@ function ProductPage() {
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-3 rounded-full border border-border px-4 py-2">
-              <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Decrease">
+              <button
+                type="button"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                aria-label="Decrease"
+              >
                 −
               </button>
               <span className="w-6 text-center text-sm">{qty}</span>

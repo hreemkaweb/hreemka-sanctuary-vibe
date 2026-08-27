@@ -34,7 +34,9 @@ export const createProductCheckout = createServerFn({ method: "POST" })
         }),
         notes: z.string().trim().max(500).optional(),
         items: z
-          .array(z.object({ productId: z.string().uuid(), quantity: z.number().int().min(1).max(20) }))
+          .array(
+            z.object({ productId: z.string().uuid(), quantity: z.number().int().min(1).max(20) }),
+          )
           .min(1)
           .max(30),
       })
@@ -53,7 +55,8 @@ export const createProductCheckout = createServerFn({ method: "POST" })
 
     const lines = data.items.map((item) => {
       const product = (products ?? []).find((p) => p.id === item.productId);
-      if (!product || !product.active) throw new Error("A product in your cart is no longer available.");
+      if (!product || !product.active)
+        throw new Error("A product in your cart is no longer available.");
       return {
         product_id: product.id,
         product_name: product.name,
@@ -111,7 +114,10 @@ export const createProductCheckout = createServerFn({ method: "POST" })
       razorpay_order_id: provider.id,
     });
 
-    await supabaseAdmin.from("orders").update({ razorpay_order_id: provider.id }).eq("id", order.id);
+    await supabaseAdmin
+      .from("orders")
+      .update({ razorpay_order_id: provider.id })
+      .eq("id", order.id);
 
     return {
       paymentId: payment.id,
@@ -221,7 +227,8 @@ export const registerForFreeEvent = createServerFn({ method: "POST" })
       .eq("id", data.eventId)
       .maybeSingle();
     if (error) throw error;
-    if (!event || !event.registration_enabled) throw new Error("Registration is closed for this event.");
+    if (!event || !event.registration_enabled)
+      throw new Error("Registration is closed for this event.");
     if (event.is_paid && event.price_cents > 0) throw new Error("This event requires payment.");
 
     const { data: reg, error: regError } = await supabaseAdmin
@@ -254,8 +261,10 @@ export const createEventCheckout = createServerFn({ method: "POST" })
       .eq("id", data.eventId)
       .maybeSingle();
     if (error) throw error;
-    if (!event || !event.registration_enabled) throw new Error("Registration is closed for this event.");
-    if (!event.is_paid || event.price_cents <= 0) throw new Error("This event is free — no payment needed.");
+    if (!event || !event.registration_enabled)
+      throw new Error("Registration is closed for this event.");
+    if (!event.is_paid || event.price_cents <= 0)
+      throw new Error("This event is free — no payment needed.");
 
     const amount = event.price_cents * data.seats;
 
@@ -386,9 +395,7 @@ export const markPaymentFailed = createServerFn({ method: "POST" })
 
 /* -------------------------------- helpers --------------------------------- */
 
-type AdminClient = Awaited<
-  typeof import("@/integrations/supabase/client.server")
->["supabaseAdmin"];
+type AdminClient = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
 
 type PaymentRow = {
   id: string;

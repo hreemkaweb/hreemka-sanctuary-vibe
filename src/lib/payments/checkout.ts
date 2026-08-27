@@ -9,7 +9,10 @@ const SCRIPT_SRC = "https://checkout.razorpay.com/v1/checkout.js";
 
 declare global {
   interface Window {
-    Razorpay?: new (options: Record<string, unknown>) => { open: () => void; on: (e: string, cb: (r: unknown) => void) => void };
+    Razorpay?: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (e: string, cb: (r: unknown) => void) => void;
+    };
   }
 }
 
@@ -108,7 +111,8 @@ export async function runCheckout(
             finish({
               status: "processing",
               recordId: session.recordId,
-              message: "Payment received — we are still confirming it. We will be in touch shortly.",
+              message:
+                "Payment received — we are still confirming it. We will be in touch shortly.",
             });
           }
         })();

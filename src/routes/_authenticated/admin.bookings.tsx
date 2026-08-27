@@ -9,7 +9,9 @@ export const Route = createFileRoute("/_authenticated/admin/bookings")({
         table="consultation_bookings"
         titleKey="customer_name"
         subtitle={(r) =>
-          `${String(r["service"] || "—")} · ${String(r["preferred_date"] ?? "").slice(0, 16).replace("T", " ")} · ${String(r["status"])}`
+          `${String(r["service"] || "—")} · ${String(r["preferred_date"] ?? "")
+            .slice(0, 16)
+            .replace("T", " ")} · ${String(r["status"])}`
         }
         searchKeys={["customer_name", "customer_email", "customer_phone", "service"]}
         orderBy={{ column: "created_at", ascending: false }}

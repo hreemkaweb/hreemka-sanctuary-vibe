@@ -44,21 +44,24 @@ export function Reveal({
 export function SectionHeading({
   eyebrow,
   title,
+  name,
   subtitle,
   align = "center",
 }: {
   eyebrow: string;
   title: string;
+  name?: string;
   subtitle?: string;
   align?: "center" | "left";
 }) {
   return (
     <Reveal className={align === "center" ? "text-center" : ""}>
       <p className="eyebrow">{eyebrow}</p>
-      <h2 className="mt-4 text-4xl leading-[1.1] sm:text-5xl">{title}</h2>
+      {name ? <p className="mt-4 font-display text-3xl text-primary">{name}</p> : null}
+      <h2 className={`${name ? "mt-3" : "mt-4"} text-4xl leading-[1.1] sm:text-5xl`}>{title}</h2>
       {subtitle ? (
         <p
-          className={`mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground ${
+          className={`mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground ${
             align === "center" ? "mx-auto" : ""
           }`}
         >

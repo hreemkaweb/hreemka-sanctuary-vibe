@@ -160,9 +160,7 @@ export function AdminShell({
             </button>
             <div className="min-w-0 flex-1">
               <h1 className="font-display text-3xl sm:text-4xl">{title}</h1>
-              {subtitle ? (
-                <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
-              ) : null}
+              {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
             </div>
             <div className="flex items-center gap-3">
               {actions}

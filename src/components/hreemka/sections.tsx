@@ -4,9 +4,11 @@ import { toast } from "sonner";
 import { Mandala, Particles, Reveal, SectionHeading } from "./primitives";
 import { createConsultationCheckout } from "@/lib/payments/payments.functions";
 import { runCheckout } from "@/lib/payments/checkout";
-import founderImg from "@/assets/founder.jpg";
+import { useAuth } from "@/hooks/useAuth";
+import founderImg from "@/assets/founder2.JPG";
 
-const WHATSAPP = "https://wa.me/919000000000?text=Hi%20Hreemka%2C%20I%27d%20like%20to%20book%20a%20consultation";
+const WHATSAPP =
+  "https://wa.me/919100442224?text=Hi%20Hreemka%2C%20I%27d%20like%20to%20book%20a%20consultation";
 
 /* ---------------------------------- Nav ---------------------------------- */
 
@@ -20,9 +22,9 @@ const navLinks = [
   { label: "FAQ", to: "/faq" },
 ] as const;
 
-
 export function Nav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { user } = useAuth();
   const onHome = pathname === "/";
   const [atTop, setAtTop] = useState(true);
   const [open, setOpen] = useState(false);
@@ -36,7 +38,6 @@ export function Nav() {
 
   // Only the home page has a dark cinematic hero behind the nav.
   const scrolled = !onHome || !atTop;
-
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
@@ -67,11 +68,18 @@ export function Nav() {
                 {l.label}
               </Link>
             ))}
+            <Link
+              to={user ? "/account" : "/auth"}
+              className={`text-xs tracking-[0.18em] uppercase transition-opacity hover:opacity-60 ${
+                scrolled ? "text-foreground" : "text-primary-foreground"
+              }`}
+            >
+              {user ? "Account" : "Sign in"}
+            </Link>
             <Link to="/book" className="btn-sacred !px-6 !py-3">
               Book now
             </Link>
           </nav>
-
 
           <button
             type="button"
@@ -88,7 +96,6 @@ export function Nav() {
 
       {open ? (
         <div className="liquid-glass liquid-glass-strong mx-1 mt-3 rounded-3xl p-6 lg:hidden">
-
           <div className="flex flex-col gap-4">
             {navLinks.map((l) => (
               <Link
@@ -100,6 +107,13 @@ export function Nav() {
                 {l.label}
               </Link>
             ))}
+            <Link
+              to={user ? "/account" : "/auth"}
+              onClick={() => setOpen(false)}
+              className="text-xs tracking-[0.2em] uppercase text-foreground"
+            >
+              {user ? "Account" : "Sign in"}
+            </Link>
             <Link to="/book" onClick={() => setOpen(false)} className="btn-sacred mt-2">
               Book now
             </Link>
@@ -143,12 +157,13 @@ export function Founder() {
             align="left"
             eyebrow="Meet the founder"
             title="Guidance held with warmth, wisdom and complete confidentiality"
+            name="Sreeja Thota"
             subtitle="Hreemka was born from a simple belief — that healing should never feel frightening or transactional. For over nine years, our founder has walked beside people navigating heartbreak, career confusion, anxiety and the quiet ache of feeling stuck, blending ancient Indian spiritual wisdom with grounded, holistic practice."
           />
           <Reveal delay={120}>
             <p className="mt-6 leading-relaxed text-muted-foreground">
-              Every session is personal. No fear-based predictions, no rituals you did not ask
-              for — only clarity, compassion and practices you can carry into daily life.
+              Every session is personal. No fear-based predictions, no rituals you did not ask for —
+              only clarity, compassion and practices you can carry into daily life.
             </p>
             <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
               {founderStats.map((s) => (
@@ -259,7 +274,10 @@ export function Journey() {
 /* -------------------------------- Services ------------------------------- */
 
 const services = [
-  ["Personalized Consultation", "A deep one-to-one reading of where you are and what wants to shift."],
+  [
+    "Personalized Consultation",
+    "A deep one-to-one reading of where you are and what wants to shift.",
+  ],
   ["Tarot Guidance", "Honest, intuitive insight into love, career and life decisions."],
   ["Crystal Healing", "Stones selected for your energy to restore balance and calm."],
   ["Breathwork", "Guided breathing to release anxiety held in the nervous system."],
@@ -376,8 +394,16 @@ const stories = [
 
 const testimonials = [
   { name: "Divya P.", text: "Genuine, warm and never fear-based. Rare in this space.", rating: 5 },
-  { name: "Rohan M.", text: "The sound healing session was the first hour of quiet I'd had in years.", rating: 5 },
-  { name: "Sneha K.", text: "Practical guidance I could actually use the next morning.", rating: 5 },
+  {
+    name: "Rohan M.",
+    text: "The sound healing session was the first hour of quiet I'd had in years.",
+    rating: 5,
+  },
+  {
+    name: "Sneha K.",
+    text: "Practical guidance I could actually use the next morning.",
+    rating: 5,
+  },
   { name: "Ayesha N.", text: "I felt held, not sold to. That made all the difference.", rating: 5 },
 ];
 
@@ -424,10 +450,25 @@ export function Stories() {
 /* --------------------------------- Events -------------------------------- */
 
 const events = [
-  { date: "12 Aug", title: "Full Moon Sound Healing", place: "Mumbai · In person", spots: "12 seats" },
+  {
+    date: "12 Aug",
+    title: "Full Moon Sound Healing",
+    place: "Mumbai · In person",
+    spots: "12 seats",
+  },
   { date: "24 Aug", title: "Breathwork for Anxiety", place: "Online · 90 minutes", spots: "Open" },
-  { date: "07 Sep", title: "Crystal & Chakra Workshop", place: "Pune · In person", spots: "18 seats" },
-  { date: "28 Sep", title: "Weekend Healing Retreat", place: "Lonavala · 2 days", spots: "9 seats" },
+  {
+    date: "07 Sep",
+    title: "Crystal & Chakra Workshop",
+    place: "Pune · In person",
+    spots: "18 seats",
+  },
+  {
+    date: "28 Sep",
+    title: "Weekend Healing Retreat",
+    place: "Lonavala · 2 days",
+    spots: "9 seats",
+  },
 ];
 
 export function Events() {
@@ -475,11 +516,26 @@ export function Events() {
 /* ---------------------------------- FAQ ---------------------------------- */
 
 const faqs = [
-  ["Is this astrology or fortune telling?", "No. We do not predict fixed futures or use fear. Our work is about clarity, emotional healing and practical guidance you can act on."],
-  ["Do I need to believe in any of this?", "Not at all. Many clients arrive sceptical. You only need honesty about what feels heavy right now."],
-  ["Are online sessions as effective?", "Yes. Energy work, tarot, breathwork and sound healing all translate beautifully over video."],
-  ["How long is a consultation?", "A first consultation runs 60–75 minutes, with a short follow-up note afterwards."],
-  ["Is my information private?", "Completely. Nothing shared in a session is ever discussed, recorded or published."],
+  [
+    "Is this astrology or fortune telling?",
+    "No. We do not predict fixed futures or use fear. Our work is about clarity, emotional healing and practical guidance you can act on.",
+  ],
+  [
+    "Do I need to believe in any of this?",
+    "Not at all. Many clients arrive sceptical. You only need honesty about what feels heavy right now.",
+  ],
+  [
+    "Are online sessions as effective?",
+    "Yes. Energy work, tarot, breathwork and sound healing all translate beautifully over video.",
+  ],
+  [
+    "How long is a consultation?",
+    "A first consultation runs 60–75 minutes, with a short follow-up note afterwards.",
+  ],
+  [
+    "Is my information private?",
+    "Completely. Nothing shared in a session is ever discussed, recorded or published.",
+  ],
 ];
 
 export function FAQ() {
@@ -498,13 +554,19 @@ export function FAQ() {
                 className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 text-left"
               >
                 <span className="min-w-0 font-display text-xl">{q}</span>
-                <span className="shrink-0 text-gold transition-transform duration-500" style={{ transform: open === i ? "rotate(45deg)" : "none" }}>
+                <span
+                  className="shrink-0 text-gold transition-transform duration-500"
+                  style={{ transform: open === i ? "rotate(45deg)" : "none" }}
+                >
                   +
                 </span>
               </button>
               <div
                 className="grid transition-all duration-700 ease-out"
-                style={{ gridTemplateRows: open === i ? "1fr" : "0fr", opacity: open === i ? 1 : 0 }}
+                style={{
+                  gridTemplateRows: open === i ? "1fr" : "0fr",
+                  opacity: open === i ? 1 : 0,
+                }}
               >
                 <div className="overflow-hidden">
                   <p className="pt-4 leading-relaxed text-muted-foreground">{a}</p>
@@ -574,13 +636,32 @@ export function Booking() {
             onSubmit={submit}
           >
             <Field label="Your name">
-              <input name="name" required maxLength={100} className="field" placeholder="Full name" />
+              <input
+                name="name"
+                required
+                maxLength={100}
+                className="field"
+                placeholder="Full name"
+              />
             </Field>
             <Field label="Email">
-              <input name="email" type="email" required maxLength={255} className="field" placeholder="you@email.com" />
+              <input
+                name="email"
+                type="email"
+                required
+                maxLength={255}
+                className="field"
+                placeholder="you@email.com"
+              />
             </Field>
             <Field label="Phone">
-              <input name="phone" required maxLength={20} className="field" placeholder="Mobile number" />
+              <input
+                name="phone"
+                required
+                maxLength={20}
+                className="field"
+                placeholder="Mobile number"
+              />
             </Field>
             <Field label="Service">
               <select name="service" required className="field" defaultValue="">
@@ -608,7 +689,13 @@ export function Booking() {
             </Field>
             <div className="sm:col-span-2">
               <Field label="What would you like guidance on?">
-                <textarea name="message" rows={4} maxLength={1000} className="field resize-none" placeholder="Share as much or as little as you wish" />
+                <textarea
+                  name="message"
+                  rows={4}
+                  maxLength={1000}
+                  className="field resize-none"
+                  placeholder="Share as much or as little as you wish"
+                />
               </Field>
             </div>
             <label className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground sm:col-span-2">
@@ -657,13 +744,19 @@ export function Footer() {
         <div>
           <p className="font-display text-2xl tracking-[0.28em] uppercase">Hreemka</p>
           <p className="mt-4 max-w-sm leading-relaxed text-muted-foreground">
-            A sanctuary for clarity, emotional healing and transformation — rooted in ancient
-            Indian wisdom, offered with modern care.
+            A sanctuary for clarity, emotional healing and transformation — rooted in ancient Indian
+            wisdom, offered with modern care.
           </p>
           <div className="mt-6 flex gap-4 text-xs tracking-[0.2em] uppercase text-muted-foreground">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">Facebook</a>
-            <a href="https://youtube.com" target="_blank" rel="noreferrer">YouTube</a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+              Instagram
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+              Facebook
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noreferrer">
+              YouTube
+            </a>
           </div>
         </div>
 
@@ -703,7 +796,9 @@ export function Footer() {
               Join
             </button>
           </form>
-          {subscribed ? <p className="mt-3 text-sm text-primary">You&apos;re in. Welcome.</p> : null}
+          {subscribed ? (
+            <p className="mt-3 text-sm text-primary">You&apos;re in. Welcome.</p>
+          ) : null}
         </div>
       </div>
       <p className="mx-auto mt-14 max-w-6xl px-6 text-xs tracking-[0.16em] uppercase text-muted-foreground">

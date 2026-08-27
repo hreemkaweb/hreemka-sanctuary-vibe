@@ -44,26 +44,26 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const handleForgotPassword = async () => {
-  if (!email) {
-    alert("Please enter your email address first.");
-    return;
-  }
+    if (!email) {
+      alert("Please enter your email address first.");
+      return;
+    }
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
-  });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
+    if (error) {
+      alert(error.message);
+      return;
+    }
 
-  alert("Password reset link has been sent to your email.");
-};
+    alert("Password reset link has been sent to your email.");
+  };
 
   useEffect(() => {
     if (window.location.pathname === "/reset-password") return;
-    
+
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session) void navigate({ to: destination, replace: true });
     });
@@ -101,19 +101,19 @@ function AuthPage() {
       setBusy(false);
     }
   };
-const google = async () => {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: window.location.origin,
-    },
-  });
+  const google = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin,
+      },
+    });
 
-  if (error) {
-    toast.error(error.message);
-    return;
-  }
-};
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+  };
 
   return (
     <ShopShell
@@ -133,7 +133,8 @@ const google = async () => {
             </button>
 
             <div className="my-6 flex items-center gap-3 text-[0.65rem] tracking-[0.24em] uppercase text-muted-foreground">
-              <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+              <span className="h-px flex-1 bg-border" /> or{" "}
+              <span className="h-px flex-1 bg-border" />
             </div>
 
             <form onSubmit={submit} className="space-y-4">
@@ -166,15 +167,19 @@ const google = async () => {
                 required
               />
               {mode === "signin" && (
-               <button
-              type="button"
-              onClick={handleForgotPassword}
-               className="mt-3 text-sm text-primary hover:underline"
-             >
-               Forgot password?
-             </button>
-               )}
-              <button type="submit" disabled={busy} className="btn-sacred w-full disabled:opacity-60">
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="mt-3 text-sm text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              )}
+              <button
+                type="submit"
+                disabled={busy}
+                className="btn-sacred w-full disabled:opacity-60"
+              >
                 {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
               </button>
             </form>

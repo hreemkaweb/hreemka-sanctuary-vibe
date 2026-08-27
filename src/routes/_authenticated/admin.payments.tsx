@@ -21,9 +21,7 @@ function AdminPayments() {
     },
   });
 
-  const total = data
-    .filter((p) => p.status === "paid")
-    .reduce((sum, p) => sum + p.amount_cents, 0);
+  const total = data.filter((p) => p.status === "paid").reduce((sum, p) => sum + p.amount_cents, 0);
 
   return (
     <AdminShell title="Payments" subtitle="Transactions recorded against orders and bookings.">
@@ -33,7 +31,10 @@ function AdminPayments() {
       </div>
       <div className="space-y-3">
         {data.map((p) => (
-          <article key={p.id} className="liquid-glass card-liquid flex flex-wrap items-center gap-4 p-5">
+          <article
+            key={p.id}
+            className="liquid-glass card-liquid flex flex-wrap items-center gap-4 p-5"
+          >
             <span className="min-w-0 flex-1 truncate">{p.transaction_ref || p.id}</span>
             <span className="text-xs text-muted-foreground">{p.provider}</span>
             <span className="text-xs text-muted-foreground">{p.status}</span>
@@ -43,7 +44,9 @@ function AdminPayments() {
             </span>
           </article>
         ))}
-        {data.length === 0 ? <p className="text-sm text-muted-foreground">No payments recorded yet.</p> : null}
+        {data.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No payments recorded yet.</p>
+        ) : null}
       </div>
     </AdminShell>
   );

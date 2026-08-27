@@ -65,7 +65,10 @@ function OrderPage() {
   const stepIndex = TIMELINE.indexOf(order.status);
 
   return (
-    <ShopShell title={order.order_number} subtitle={`Placed ${new Date(order.created_at).toLocaleString()}`}>
+    <ShopShell
+      title={order.order_number}
+      subtitle={`Placed ${new Date(order.created_at).toLocaleString()}`}
+    >
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-6">
           <div className="liquid-glass card-liquid p-7">
@@ -106,7 +109,11 @@ function OrderPage() {
                 <div key={it.id} className="flex items-center gap-4">
                   <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-secondary">
                     {image ? (
-                      <img src={image} alt={it.product_name} className="h-full w-full object-cover" />
+                      <img
+                        src={image}
+                        alt={it.product_name}
+                        className="h-full w-full object-cover"
+                      />
                     ) : null}
                   </div>
                   <div className="min-w-0 flex-1">

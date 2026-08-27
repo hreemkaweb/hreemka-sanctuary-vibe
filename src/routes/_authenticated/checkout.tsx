@@ -132,7 +132,12 @@ function CheckoutPage() {
           <div className="grid gap-4 sm:grid-cols-3">
             <input name="shipping_city" className="glass-field" placeholder="City" required />
             <input name="shipping_state" className="glass-field" placeholder="State" required />
-            <input name="shipping_postcode" className="glass-field" placeholder="Postcode" required />
+            <input
+              name="shipping_postcode"
+              className="glass-field"
+              placeholder="Postcode"
+              required
+            />
           </div>
           <textarea name="notes" className="glass-field min-h-20" placeholder="Notes (optional)" />
         </div>
@@ -161,7 +166,8 @@ function CheckoutPage() {
             {busy ? "Opening secure payment…" : "Pay securely"}
           </button>
           <p className="text-center text-xs text-muted-foreground">
-            Payments are processed securely by Razorpay. Cards, UPI, netbanking and wallets accepted.
+            Payments are processed securely by Razorpay. Cards, UPI, netbanking and wallets
+            accepted.
           </p>
         </aside>
       </form>

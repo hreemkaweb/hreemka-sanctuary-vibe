@@ -4,7 +4,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Admin — Hreemka" },
-      { name: "description", content: "Manage the Hreemka website, catalog, bookings and content." },
+      {
+        name: "description",
+        content: "Manage the Hreemka website, catalog, bookings and content.",
+      },
       { property: "og:title", content: "Admin — Hreemka" },
       {
         property: "og:description",

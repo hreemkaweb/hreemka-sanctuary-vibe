@@ -60,7 +60,8 @@ function fromInput(type: FieldType, value: unknown) {
   if (type === "price") return Math.round(Number(value || 0) * 100);
   if (type === "number") return Math.round(Number(value || 0));
   if (type === "checkbox") return Boolean(value);
-  if (type === "datetime" || type === "date") return value ? new Date(String(value)).toISOString() : null;
+  if (type === "datetime" || type === "date")
+    return value ? new Date(String(value)).toISOString() : null;
   if (type === "image") return value || null;
   return value;
 }
@@ -119,7 +120,11 @@ export function CrudManager({
     const q = search.trim().toLowerCase();
     if (!q) return rows;
     return rows.filter((row) =>
-      searchKeys.some((k) => String(row[k] ?? "").toLowerCase().includes(q)),
+      searchKeys.some((k) =>
+        String(row[k] ?? "")
+          .toLowerCase()
+          .includes(q),
+      ),
     );
   }, [rows, search, searchKeys]);
 
@@ -140,7 +145,10 @@ export function CrudManager({
       for (const f of fields) payload[f.key] = fromInput(f.type, draft[f.key]);
       const id = draft["id"] as string | undefined;
       const { error } = id
-        ? await supabase.from(table as never).update(payload as never).eq("id", id)
+        ? await supabase
+            .from(table as never)
+            .update(payload as never)
+            .eq("id", id)
         : await supabase.from(table as never).insert(payload as never);
       if (error) throw error;
       toast.success(id ? "Saved" : "Created");
@@ -155,7 +163,10 @@ export function CrudManager({
 
   const remove = async (row: Row) => {
     if (!window.confirm(`Delete "${String(row[titleKey])}"? This cannot be undone.`)) return;
-    const { error } = await supabase.from(table as never).delete().eq("id", row["id"] as string);
+    const { error } = await supabase
+      .from(table as never)
+      .delete()
+      .eq("id", row["id"] as string);
     if (error) {
       toast.error(error.message);
       return;
@@ -219,12 +230,7 @@ export function CrudManager({
           <h2 className="font-display text-2xl">{draft["id"] ? "Edit" : "New entry"}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {fields.map((f) => (
-              <FieldInput
-                key={f.key}
-                field={f}
-                draft={draft}
-                setDraft={setDraft}
-              />
+              <FieldInput key={f.key} field={f} draft={draft} setDraft={setDraft} />
             ))}
           </div>
           <div className="flex gap-3">
@@ -333,7 +339,8 @@ function Thumb({ row }: { row: Row }) {
         (row["banner_url"] as string) ??
         (row["cover_url"] as string) ??
         (row["photo_url"] as string) ??
-        ((row["images"] as string[] | undefined)?.[0] ?? null),
+        (row["images"] as string[] | undefined)?.[0] ??
+        null,
     ) ?? null;
   if (!src) return null;
   return (
@@ -424,7 +431,8 @@ function FieldInput({
   }
 
   if (field.type === "image" || field.type === "images") {
-    const list = field.type === "images" ? ((value as string[]) ?? []) : value ? [String(value)] : [];
+    const list =
+      field.type === "images" ? ((value as string[]) ?? []) : value ? [String(value)] : [];
     const upload = async (file: File) => {
       setUploading(true);
       try {
@@ -445,9 +453,7 @@ function FieldInput({
             <button
               type="button"
               aria-label="Remove image"
-              onClick={() =>
-                set(field.type === "images" ? list.filter((i) => i !== img) : null)
-              }
+              onClick={() => set(field.type === "images" ? list.filter((i) => i !== img) : null)}
               className="absolute top-1 right-1 rounded-full bg-background/80 px-1.5 text-xs"
             >
               ×

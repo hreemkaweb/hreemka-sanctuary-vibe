@@ -46,7 +46,10 @@ function AdminCustomers() {
       />
       <div className="space-y-3">
         {filtered.map((c) => (
-          <article key={c.id} className="liquid-glass card-liquid flex flex-wrap items-center gap-4 p-5">
+          <article
+            key={c.id}
+            className="liquid-glass card-liquid flex flex-wrap items-center gap-4 p-5"
+          >
             <span className="min-w-0 flex-1 truncate">{c.full_name || "Unnamed seeker"}</span>
             <span className="text-xs text-muted-foreground">{c.phone || "—"}</span>
             <span className="text-xs text-muted-foreground">{c.orders} orders</span>
@@ -55,7 +58,9 @@ function AdminCustomers() {
             </span>
           </article>
         ))}
-        {filtered.length === 0 ? <p className="text-sm text-muted-foreground">No customers yet.</p> : null}
+        {filtered.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No customers yet.</p>
+        ) : null}
       </div>
     </AdminShell>
   );

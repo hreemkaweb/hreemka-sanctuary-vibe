@@ -8,7 +8,11 @@ export const Route = createFileRoute("/_authenticated/admin/events")({
       <CrudManager
         table="events"
         titleKey="title"
-        subtitle={(r) => `${String(r["starts_at"] ?? "").slice(0, 16).replace("T", " ")} · ${String(r["location"] || "Online")}`}
+        subtitle={(r) =>
+          `${String(r["starts_at"] ?? "")
+            .slice(0, 16)
+            .replace("T", " ")} · ${String(r["location"] || "Online")}`
+        }
         searchKeys={["title", "location", "description"]}
         orderBy={{ column: "starts_at", ascending: false }}
         extraInvalidate={["site-events"]}

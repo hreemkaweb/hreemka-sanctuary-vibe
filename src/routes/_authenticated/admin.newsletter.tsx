@@ -21,7 +21,9 @@ function AdminNewsletter() {
   });
 
   const exportCsv = () => {
-    const csv = ["email,subscribed_at", ...data.map((s) => `${s.email},${s.created_at}`)].join("\n");
+    const csv = ["email,subscribed_at", ...data.map((s) => `${s.email},${s.created_at}`)].join(
+      "\n",
+    );
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     const a = document.createElement("a");
     a.href = url;
@@ -48,7 +50,9 @@ function AdminNewsletter() {
             </span>
           </div>
         ))}
-        {data.length === 0 ? <p className="text-sm text-muted-foreground">No subscribers yet.</p> : null}
+        {data.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No subscribers yet.</p>
+        ) : null}
       </div>
     </AdminShell>
   );

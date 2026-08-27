@@ -13,29 +13,29 @@ function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
 
-useEffect(() => {
-  const checkRecoverySession = async () => {
-    const { data } = await supabase.auth.getSession();
+  useEffect(() => {
+    const checkRecoverySession = async () => {
+      const { data } = await supabase.auth.getSession();
 
-    if (data.session) {
-      setSessionReady(true);
-    }
-  };
+      if (data.session) {
+        setSessionReady(true);
+      }
+    };
 
-  checkRecoverySession();
+    checkRecoverySession();
 
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((event, session) => {
-    if (event === "PASSWORD_RECOVERY" && session) {
-      setSessionReady(true);
-    }
-  });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY" && session) {
+        setSessionReady(true);
+      }
+    });
 
-  return () => {
-    subscription.unsubscribe();
-  };
-}, []);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,9 +71,7 @@ useEffect(() => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md p-8">
-        <h1 className="text-3xl text-center mb-6">
-          Reset Password
-        </h1>
+        <h1 className="text-3xl text-center mb-6">Reset Password</h1>
 
         <form onSubmit={handleResetPassword} className="space-y-4">
           <input
@@ -96,11 +94,7 @@ useEffect(() => {
             className="glass-field w-full"
           />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-sacred w-full"
-          >
+          <button type="submit" disabled={loading} className="btn-sacred w-full">
             {loading ? "Updating..." : "Update Password"}
           </button>
         </form>

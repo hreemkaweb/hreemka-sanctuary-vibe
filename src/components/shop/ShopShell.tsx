@@ -43,10 +43,7 @@ export function ShopNav() {
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <div className="liquid-glass liquid-glass-strong mx-auto max-w-6xl rounded-full">
         <div className="flex items-center justify-between gap-4 px-5 py-3 sm:px-7">
-          <Link
-            to="/"
-            className="font-display text-xl tracking-[0.28em] uppercase text-foreground"
-          >
+          <Link to="/" className="font-display text-xl tracking-[0.28em] uppercase text-foreground">
             Hreemka
           </Link>
 

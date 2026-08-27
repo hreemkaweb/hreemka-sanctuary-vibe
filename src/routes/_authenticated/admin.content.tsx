@@ -33,7 +33,10 @@ function AdminContent() {
       for (const row of data) {
         const next = values[row.key] ?? "";
         if (next === (row.value ?? "")) continue;
-        const { error } = await supabase.from("site_content").update({ value: next }).eq("key", row.key);
+        const { error } = await supabase
+          .from("site_content")
+          .update({ value: next })
+          .eq("key", row.key);
         if (error) throw error;
       }
       toast.success("Website content updated");
@@ -62,8 +65,15 @@ function AdminContent() {
             />
           </label>
         ))}
-        {data.length === 0 ? <p className="text-sm text-muted-foreground">No content keys yet.</p> : null}
-        <button type="button" onClick={save} disabled={saving} className="btn-sacred disabled:opacity-60">
+        {data.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No content keys yet.</p>
+        ) : null}
+        <button
+          type="button"
+          onClick={save}
+          disabled={saving}
+          className="btn-sacred disabled:opacity-60"
+        >
           {saving ? "Saving…" : "Save changes"}
         </button>
       </div>

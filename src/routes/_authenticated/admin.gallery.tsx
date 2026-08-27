@@ -13,7 +13,13 @@ export const Route = createFileRoute("/_authenticated/admin/gallery")({
         orderBy={{ column: "sort_order", ascending: true }}
         extraInvalidate={["site-gallery"]}
         toggles={[{ key: "active", label: "Active" }]}
-        defaults={{ caption: "", media_url: null, media_type: "image", sort_order: 0, active: true }}
+        defaults={{
+          caption: "",
+          media_url: null,
+          media_type: "image",
+          sort_order: 0,
+          active: true,
+        }}
         fields={[
           { key: "caption", label: "Caption", type: "text" },
           { key: "media_url", label: "Image", type: "image" },

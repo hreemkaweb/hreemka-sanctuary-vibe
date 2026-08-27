@@ -13,7 +13,14 @@ export const Route = createFileRoute("/_authenticated/admin/categories")({
         orderBy={{ column: "sort_order", ascending: true }}
         extraInvalidate={["products"]}
         toggles={[{ key: "active", label: "Active" }]}
-        defaults={{ name: "", slug: "", description: "", image_url: null, sort_order: 0, active: true }}
+        defaults={{
+          name: "",
+          slug: "",
+          description: "",
+          image_url: null,
+          sort_order: 0,
+          active: true,
+        }}
         fields={[
           { key: "name", label: "Name", type: "text", slugFrom: "slug" },
           { key: "slug", label: "Slug", type: "text" },

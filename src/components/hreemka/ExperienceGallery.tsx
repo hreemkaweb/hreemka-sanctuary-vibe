@@ -18,11 +18,31 @@ type GalleryItem = {
 
 /** Add up to 20 items here — the marquee adapts automatically. */
 const items: GalleryItem[] = [
-  { src: gallery1, alt: "Founder guiding a client through a tarot consultation", caption: "Founder with clients" },
-  { src: gallery2, alt: "Group healing workshop seated in a circle", caption: "Workshops & events" },
-  { src: gallery3, alt: "Rose quartz and amethyst crystals on ivory linen", caption: "Crystal healing" },
-  { src: gallery4, alt: "Woman meditating in a sunlit sanctuary room", caption: "Meditation sessions" },
-  { src: gallery5, alt: "Mala beads, singing bowl and sacred oils", caption: "Genuine healing products" },
+  {
+    src: gallery1,
+    alt: "Founder guiding a client through a tarot consultation",
+    caption: "Founder with clients",
+  },
+  {
+    src: gallery2,
+    alt: "Group healing workshop seated in a circle",
+    caption: "Workshops & events",
+  },
+  {
+    src: gallery3,
+    alt: "Rose quartz and amethyst crystals on ivory linen",
+    caption: "Crystal healing",
+  },
+  {
+    src: gallery4,
+    alt: "Woman meditating in a sunlit sanctuary room",
+    caption: "Meditation sessions",
+  },
+  {
+    src: gallery5,
+    alt: "Mala beads, singing bowl and sacred oils",
+    caption: "Genuine healing products",
+  },
   { src: gallery6, alt: "Two women smiling after a healing session", caption: "Happy clients" },
   { src: founder, alt: "Portrait of the Hreemka founder", caption: "Behind the scenes" },
   { src: hero2, alt: "Amethyst crystal cluster in soft light", caption: "Energy work" },
@@ -46,7 +66,10 @@ function Card({ item }: { item: GalleryItem }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         <figcaption className="absolute inset-x-0 bottom-0 translate-y-3 p-5 text-primary-foreground opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-          <span className="eyebrow" style={{ color: "color-mix(in oklab, var(--gold) 85%, white)" }}>
+          <span
+            className="eyebrow"
+            style={{ color: "color-mix(in oklab, var(--gold) 85%, white)" }}
+          >
             Hreemka
           </span>
           <p className="mt-2 text-lg leading-snug">{item.caption}</p>

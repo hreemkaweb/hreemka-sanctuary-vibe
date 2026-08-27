@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
+import scene2 from "@/assets/scene.2.JPG";
+import scene3 from "@/assets/scene3.JPG";
 import hero5 from "@/assets/hero-5.jpg";
 
 const scenes = [
@@ -13,14 +13,14 @@ const scenes = [
     cta: "Begin with clarity",
   },
   {
-    image: hero2,
+    image: scene2,
     eyebrow: "Scene Two",
     title: "Heal Emotional & Energetic Blocks",
     text: "Grief, fear and old patterns settle in the body. We gently release what has been carried for far too long.",
     cta: "Release what weighs you",
   },
   {
-    image: hero3,
+    image: scene3,
     eyebrow: "Scene Three",
     title: "Discover Ancient Healing Practices",
     text: "Tarot, crystals, sound, breath and switchwords — timeless Indian wisdom, offered with modern care and ethics.",
@@ -49,6 +49,12 @@ export function HeroStory() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    const preloadedImages = scenes.map(({ image }) => {
+      const preload = new Image();
+      preload.src = image;
+      return preload;
+    });
+
     const onScroll = () => {
       const el = wrapRef.current;
       if (!el) return;
@@ -62,6 +68,7 @@ export function HeroStory() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
+      preloadedImages.length = 0;
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
