@@ -6,6 +6,15 @@ import { createConsultationCheckout } from "@/lib/payments/payments.functions";
 import { runCheckout } from "@/lib/payments/checkout";
 import { useAuth } from "@/hooks/useAuth";
 import founderImg from "@/assets/founder2.JPG";
+import consultationImg from "@/assets/gallery-6.jpg";
+import tarotImg from "@/assets/gallery-1.jpg";
+import crystalImg from "@/assets/scene2.png";
+import breathworkImg from "@/assets/gallery-4.jpg";
+import soundImg from "@/assets/gallery-5.jpg";
+import numerologyImg from "@/assets/scene3.JPG";
+import switchwordsImg from "@/assets/scene.2.JPG";
+import affirmationsImg from "@/assets/gallery-2.jpg";
+import chakraImg from "@/assets/hero-5.jpg";
 
 const WHATSAPP =
   "https://wa.me/919100442224?text=Hi%20Hreemka%2C%20I%27d%20like%20to%20book%20a%20consultation";
@@ -277,16 +286,16 @@ const services = [
   [
     "Personalized Consultation",
     "A deep one-to-one reading of where you are and what wants to shift.",
+    consultationImg,
   ],
-  ["Tarot Guidance", "Honest, intuitive insight into love, career and life decisions."],
-  ["Crystal Healing", "Stones selected for your energy to restore balance and calm."],
-  ["Breathwork", "Guided breathing to release anxiety held in the nervous system."],
-  ["Sound Healing", "Singing bowls and vibration to quiet an overactive mind."],
-  ["Numerology", "Your numbers, decoded into practical life direction."],
-  ["Switchwords", "Short sacred words to reprogram thought and attract flow."],
-  ["Affirmations", "Personalised affirmations that rewrite inner dialogue."],
-  ["Chakra Healing", "Rebalancing the energy centres that govern daily wellbeing."],
-  ["Emotional Root Cause Healing", "Tracing recurring pain to its origin — and releasing it."],
+  ["Tarot Guidance", "Honest, intuitive insight into love, career and life decisions.", tarotImg],
+  ["Crystal Healing", "Stones selected for your energy to restore balance and calm.", crystalImg],
+  ["Breathwork", "Guided breathing to release anxiety held in the nervous system.", breathworkImg],
+  ["Sound Healing", "Singing bowls and vibration to quiet an overactive mind.", soundImg],
+  ["Numerology", "Your numbers, decoded into practical life direction.", numerologyImg],
+  ["Switchwords", "Short sacred words to reprogram thought and attract flow.", switchwordsImg],
+  ["Affirmations", "Personalised affirmations that rewrite inner dialogue.", affirmationsImg],
+  ["Chakra Healing", "Rebalancing the energy centres that govern daily wellbeing.", chakraImg],
 ] as const;
 
 export function Services() {
@@ -300,17 +309,28 @@ export function Services() {
           subtitle="Every modality can be offered online or in person, and often blended within a single session."
         />
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map(([title, text], i) => (
+          {services.map(([title, text, image], i) => (
             <Reveal key={title} delay={(i % 3) * 90}>
-              <article className="liquid-glass card-liquid flex h-full flex-col p-8">
-                <h3 className="text-2xl">{title}</h3>
-                <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{text}</p>
-                <Link
-                  to="/book"
-                  className="mt-7 text-xs tracking-[0.2em] uppercase text-primary transition-opacity hover:opacity-60"
-                >
-                  Book now →
-                </Link>
+              <article className="liquid-glass card-liquid relative flex h-full flex-col overflow-hidden p-8">
+                <img
+                  src={image}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
+                  className="pointer-events-none absolute inset-y-0 right-0 z-0 h-full w-[68%] object-cover opacity-45"
+                />
+                <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-card via-card/90 to-card/10" />
+                <div className="relative z-20 flex h-full flex-col">
+                  <h3 className="text-2xl">{title}</h3>
+                  <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{text}</p>
+                  <Link
+                    to="/book"
+                    className="mt-7 text-xs tracking-[0.2em] uppercase text-primary transition-opacity hover:opacity-60"
+                  >
+                    Book now →
+                  </Link>
+                </div>
               </article>
             </Reveal>
           ))}
