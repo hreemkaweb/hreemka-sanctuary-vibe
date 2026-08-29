@@ -9,6 +9,7 @@ import {
   Founder,
   Journey,
   Nav,
+  PremiumProductCarousel,
   Products,
   Services,
   Stories,
@@ -62,6 +63,7 @@ function Index() {
         <Journey />
         <Services />
         <Products />
+        <PremiumProductCarousel />
         <Stories />
         <Events />
         <FAQ />

@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { formatPrice, productImageUrl, type Product } from "@/lib/shop";
 import { Mandala, Particles, Reveal, SectionHeading } from "./primitives";
 import { createConsultationCheckout } from "@/lib/payments/payments.functions";
 import { runCheckout } from "@/lib/payments/checkout";
@@ -383,6 +386,258 @@ export function Products() {
           <Link to="/shop" className="btn-sacred">
             Visit the shop
           </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function PremiumProductCarousel() {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [trackOffset, setTrackOffset] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["products", "featured-home"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("active", true)
+        .order("featured", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(8);
+
+      if (error) throw error;
+      return (data ?? []) as Product[];
+    },
+  });
+
+  const curatedProducts = useMemo(() => {
+    const featured = products.filter((product) => product.featured || product.stock > 0);
+    return (featured.length ? featured : products).slice(0, 8);
+  }, [products]);
+
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      const width = window.innerWidth;
+      setVisibleCount(width < 640 ? 1 : width < 1024 ? 2 : 3);
+    };
+
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
+    return () => window.removeEventListener("resize", updateVisibleCount);
+  }, []);
+
+  useEffect(() => {
+    if (!carouselRef.current || curatedProducts.length === 0) return;
+
+    const gap = 24;
+    const width = carouselRef.current.clientWidth;
+    const itemWidth = (width - gap * (visibleCount - 1)) / visibleCount;
+    const offset = activeIndex * (itemWidth + gap);
+    setTrackOffset(offset);
+  }, [activeIndex, curatedProducts.length, visibleCount]);
+
+  const goToNext = () => {
+    if (!curatedProducts.length) return;
+    setActiveIndex((current) => (current + 1) % curatedProducts.length);
+  };
+
+  const goToPrev = () => {
+    if (!curatedProducts.length) return;
+    setActiveIndex((current) => (current - 1 + curatedProducts.length) % curatedProducts.length);
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    setTouchStartX(event.touches[0]?.clientX ?? null);
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX === null) return;
+    const endX = event.changedTouches[0]?.clientX ?? touchStartX;
+    const delta = touchStartX - endX;
+
+    if (Math.abs(delta) > 40) {
+      if (delta > 0) goToNext();
+      else goToPrev();
+    }
+
+    setTouchStartX(null);
+  };
+
+  if (isLoading) {
+    return (
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="liquid-glass card-liquid p-10 text-center text-sm text-muted-foreground">
+            Gathering the collection…
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (curatedProducts.length === 0) return null;
+
+  return (
+    <section className="relative overflow-hidden py-24 sm:py-28">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      <div className="mx-auto max-w-6xl px-6">
+        <Reveal>
+          <div className="text-center">
+            <p className="eyebrow">Curated for your journey</p>
+            <h2 className="mt-4 text-4xl leading-[1.08] sm:text-5xl">
+              Sacred pieces to carry with you
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+              Thoughtfully chosen objects to support your rituals, reflections, and everyday
+              moments.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-12">
+          <div className="mb-8 flex items-center justify-between gap-4">
+            <div className="flex gap-2 md:hidden">
+              <button
+                type="button"
+                onClick={goToPrev}
+                aria-label="Previous product"
+                className="grid h-11 w-11 place-items-center rounded-full border border-border bg-card/80 text-lg text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={goToNext}
+                aria-label="Next product"
+                className="grid h-11 w-11 place-items-center rounded-full border border-border bg-card/80 text-lg text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+              >
+                →
+              </button>
+            </div>
+            <div className="hidden md:flex items-center gap-3">
+              <button
+                type="button"
+                onClick={goToPrev}
+                aria-label="Previous product"
+                className="grid h-12 w-12 place-items-center rounded-full border border-border bg-card/80 text-xl text-foreground transition-transform duration-300 hover:-translate-x-0.5 hover:border-primary/40 hover:text-primary"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={goToNext}
+                aria-label="Next product"
+                className="grid h-12 w-12 place-items-center rounded-full border border-border bg-card/80 text-xl text-foreground transition-transform duration-300 hover:translate-x-0.5 hover:border-primary/40 hover:text-primary"
+              >
+                →
+              </button>
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              {curatedProducts.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  aria-label={`Go to product ${index + 1}`}
+                  onClick={() => setActiveIndex(index)}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    index === activeIndex ? "w-8 bg-primary" : "w-2.5 bg-primary/25 hover:bg-primary/45"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div
+            ref={carouselRef}
+            className="overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div
+              className="flex gap-6 transition-transform duration-700 ease-out"
+              style={{ transform: `translateX(-${trackOffset}px)` }}
+            >
+              {curatedProducts.map((product, index) => {
+                const image = productImageUrl(product.images[0]);
+                const isActive = index === activeIndex;
+
+                return (
+                  <article
+                    key={product.id}
+                    className={`group shrink-0 overflow-hidden rounded-[2rem] border bg-card/70 p-3 shadow-[var(--shadow-soft)] transition-all duration-500 ${
+                      isActive
+                        ? "border-primary/20 opacity-100 scale-[1.01]"
+                        : "border-border/80 opacity-80 scale-[0.98]"
+                    }`}
+                    style={{ width: `calc((100% - ${(visibleCount - 1) * 24}px) / ${visibleCount})` }}
+                  >
+                    <div className="overflow-hidden rounded-[1.5rem] bg-secondary">
+                      <Link
+                        to="/shop/$slug"
+                        params={{ slug: product.slug }}
+                        className="block overflow-hidden"
+                      >
+                        {image ? (
+                          <img
+                            src={image}
+                            alt={product.name}
+                            loading="lazy"
+                            className={`h-[300px] w-full object-cover transition-all duration-700 ${
+                              isActive ? "scale-105" : "scale-100 group-hover:scale-105"
+                            }`}
+                          />
+                        ) : (
+                          <div className="flex h-[300px] items-center justify-center font-display text-5xl text-muted-foreground/35">
+                            ॐ
+                          </div>
+                        )}
+                      </Link>
+                    </div>
+
+                    <div className="px-3 pb-3 pt-5">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-[0.62rem] tracking-[0.2em] uppercase text-muted-foreground">
+                            {product.category}
+                          </p>
+                          <h3 className="mt-2 text-[1.7rem] leading-none text-foreground">
+                            {product.name}
+                          </h3>
+                        </div>
+                        {product.featured ? (
+                          <span className="rounded-full border border-gold/50 px-2 py-1 text-[0.5rem] tracking-[0.18em] uppercase text-gold">
+                            Featured
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <p className="mt-3 line-clamp-2 min-h-[2.8em] text-sm leading-relaxed text-muted-foreground">
+                        {product.description}
+                      </p>
+
+                      <div className="mt-5 flex items-center justify-between gap-3">
+                        <span className="font-display text-2xl text-primary">
+                          {formatPrice(product.price_cents, product.currency)}
+                        </span>
+                        <Link
+                          to="/shop/$slug"
+                          params={{ slug: product.slug }}
+                          className="inline-flex items-center justify-center rounded-full border border-primary/25 bg-primary/5 px-4 py-2 text-[0.66rem] tracking-[0.18em] uppercase text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                        >
+                          View piece
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>
