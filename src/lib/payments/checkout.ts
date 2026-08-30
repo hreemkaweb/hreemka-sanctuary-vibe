@@ -59,7 +59,7 @@ export async function runCheckout(
 
     const rzp = new RazorpayCtor({
       key: session.keyId,
-      amount: session.amountCents,
+      amount: session.amountPaise,
       currency: session.currency,
       order_id: session.providerOrderId,
       name: "Hreemka",

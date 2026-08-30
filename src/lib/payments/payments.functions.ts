@@ -99,7 +99,7 @@ export const createProductCheckout = createServerFn({ method: "POST" })
     if (itemsError) throw itemsError;
 
     const provider = await createProviderOrder({
-      amountCents: total,
+      amountPaise: total,
       currency: CURRENCY,
       receipt: order.order_number,
       notes: { kind: "product", order_id: order.id },
@@ -123,7 +123,7 @@ export const createProductCheckout = createServerFn({ method: "POST" })
       paymentId: payment.id,
       providerOrderId: provider.id,
       keyId: provider.keyId,
-      amountCents: total,
+      amountPaise: total,
       currency: CURRENCY,
       recordId: order.id,
       recordLabel: order.order_number,
@@ -177,7 +177,7 @@ export const createConsultationCheckout = createServerFn({ method: "POST" })
     if (error) throw error;
 
     const provider = await createProviderOrder({
-      amountCents: amount,
+      amountPaise: amount,
       currency: CURRENCY,
       receipt: `booking-${booking.id.slice(0, 8)}`,
       notes: { kind: "consultation", booking_id: booking.id },
@@ -200,7 +200,7 @@ export const createConsultationCheckout = createServerFn({ method: "POST" })
       paymentId: payment.id,
       providerOrderId: provider.id,
       keyId: provider.keyId,
-      amountCents: amount,
+      amountPaise: amount,
       currency: CURRENCY,
       recordId: booking.id,
       recordLabel: data.service,
@@ -285,7 +285,7 @@ export const createEventCheckout = createServerFn({ method: "POST" })
     if (regError) throw regError;
 
     const provider = await createProviderOrder({
-      amountCents: amount,
+      amountPaise: amount,
       currency: CURRENCY,
       receipt: `event-${reg.id.slice(0, 8)}`,
       notes: { kind: "event", registration_id: reg.id },
@@ -308,7 +308,7 @@ export const createEventCheckout = createServerFn({ method: "POST" })
       paymentId: payment.id,
       providerOrderId: provider.id,
       keyId: provider.keyId,
-      amountCents: amount,
+      amountPaise: amount,
       currency: CURRENCY,
       recordId: reg.id,
       recordLabel: event.title,

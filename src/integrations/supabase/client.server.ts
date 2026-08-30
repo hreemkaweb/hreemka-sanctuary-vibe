@@ -46,6 +46,13 @@ function createSupabaseAdminClient() {
     throw new Error(message);
   }
 
+  if (SUPABASE_SERVICE_ROLE_KEY.startsWith("sb_publishable_")) {
+    const message =
+      "SUPABASE_SERVICE_ROLE_KEY is a publishable key. Configure the server-only Supabase service-role/secret key.";
+    console.error(`[Supabase] ${message}`);
+    throw new Error(message);
+  }
+
   return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     global: {
       fetch: createSupabaseFetch(SUPABASE_SERVICE_ROLE_KEY),

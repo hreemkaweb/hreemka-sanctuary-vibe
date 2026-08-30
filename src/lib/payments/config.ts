@@ -25,7 +25,8 @@ export type CheckoutSession = {
   paymentId: string;
   providerOrderId: string;
   keyId: string;
-  amountCents: number;
+  /** Razorpay amount in the currency's minor unit (paise for INR). */
+  amountPaise: number;
   currency: string;
   /** Domain record created in a pending state (order / booking / registration). */
   recordId: string;

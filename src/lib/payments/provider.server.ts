@@ -21,17 +21,21 @@ function authHeader({ keyId, keySecret }: Credentials) {
 }
 
 export async function createProviderOrder(input: {
-  amountCents: number;
+  amountPaise: number;
   currency: string;
   receipt: string;
   notes?: Record<string, string>;
 }) {
+  if (!Number.isSafeInteger(input.amountPaise) || input.amountPaise <= 0) {
+    throw new Error("Payment amount must be a positive whole number of paise.");
+  }
+
   const creds = getCredentials();
   const res = await fetch("https://api.razorpay.com/v1/orders", {
     method: "POST",
     headers: { "content-type": "application/json", authorization: authHeader(creds) },
     body: JSON.stringify({
-      amount: input.amountCents,
+      amount: input.amountPaise,
       currency: input.currency,
       receipt: input.receipt.slice(0, 40),
       notes: input.notes ?? {},
@@ -39,8 +43,9 @@ export async function createProviderOrder(input: {
   });
   const body = (await res.json()) as { id?: string; error?: { description?: string } };
   if (!res.ok || !body.id) {
-    console.error("razorpay order failed", body);
-    throw new Error("Could not start the payment. Please try again.");
+    console.error("RAZORPAY STATUS:", res.status);
+    console.error("RAZORPAY RESPONSE:", body);
+    throw new Error(body.error?.description || `Razorpay failed with status ${res.status}`);
   }
   return { id: body.id, keyId: creds.keyId };
 }
