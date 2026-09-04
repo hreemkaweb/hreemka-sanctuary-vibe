@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { SectionHeading } from "@/components/hreemka/primitives";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
@@ -9,6 +10,8 @@ import founder from "@/assets/founder.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
 import hero4 from "@/assets/hero-4.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { productImageUrl } from "@/lib/shop";
 
 type GalleryItem = {
   src: string;
@@ -16,8 +19,7 @@ type GalleryItem = {
   caption: string;
 };
 
-/** Add up to 20 items here — the marquee adapts automatically. */
-const items: GalleryItem[] = [
+const fallbackItems: GalleryItem[] = [
   {
     src: gallery1,
     alt: "Founder guiding a client through a tarot consultation",
@@ -80,6 +82,35 @@ function Card({ item }: { item: GalleryItem }) {
 }
 
 export function ExperienceGallery() {
+  const { data: galleryRows = [] } = useQuery({
+    queryKey: ["site-gallery"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("gallery_items")
+        .select("*")
+        .eq("active", true)
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as Array<Record<string, unknown>>;
+    },
+    staleTime: 1000 * 60,
+  });
+
+  const items: GalleryItem[] =
+    galleryRows.length > 0
+      ? galleryRows
+          .map((row) => {
+            const src = productImageUrl(String(row["image_url"] ?? ""));
+            if (!src) return null;
+            return {
+              src,
+              alt: String(row["caption"] ?? "Hreemka gallery"),
+              caption: String(row["caption"] ?? "Hreemka"),
+            };
+          })
+          .filter((item): item is GalleryItem => Boolean(item))
+      : fallbackItems;
+
   return (
     <section id="experience" className="relative overflow-hidden py-24 sm:py-32 veil">
       <div className="absolute inset-0 halo opacity-60" aria-hidden="true" />
@@ -97,7 +128,7 @@ export function ExperienceGallery() {
           {[0, 1].map((copy) => (
             <div key={copy} className="marquee-group" aria-hidden={copy === 1}>
               {items.map((item) => (
-                <Card key={`${copy}-${item.caption}`} item={item} />
+                <Card key={`${copy}-${item.caption}-${item.src}`} item={item} />
               ))}
             </div>
           ))}

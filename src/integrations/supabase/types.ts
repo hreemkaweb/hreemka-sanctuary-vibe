@@ -124,6 +124,7 @@ export type Database = {
           admin_notes: string;
           amount_cents: number;
           consultation_type: string;
+          consent: boolean;
           created_at: string;
           customer_name: string;
           email: string;
@@ -144,6 +145,7 @@ export type Database = {
           admin_notes?: string;
           amount_cents?: number;
           consultation_type?: string;
+          consent?: boolean;
           created_at?: string;
           customer_name: string;
           email: string;
@@ -164,6 +166,7 @@ export type Database = {
           admin_notes?: string;
           amount_cents?: number;
           consultation_type?: string;
+          consent?: boolean;
           created_at?: string;
           customer_name?: string;
           email?: string;

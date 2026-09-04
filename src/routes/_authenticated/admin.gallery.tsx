@@ -8,22 +8,22 @@ export const Route = createFileRoute("/_authenticated/admin/gallery")({
       <CrudManager
         table="gallery_items"
         titleKey="caption"
-        subtitle={(r) => `${String(r["media_type"] || "image")} · order ${String(r["sort_order"])}`}
-        searchKeys={["caption", "media_type"]}
+        subtitle={(r) => `${String(r["category"] || "General")} · order ${String(r["sort_order"])}`}
+        searchKeys={["caption", "category"]}
         orderBy={{ column: "sort_order", ascending: true }}
         extraInvalidate={["site-gallery"]}
         toggles={[{ key: "active", label: "Active" }]}
         defaults={{
           caption: "",
-          media_url: null,
-          media_type: "image",
+          image_url: null,
+          category: "General",
           sort_order: 0,
           active: true,
         }}
         fields={[
           { key: "caption", label: "Caption", type: "text" },
-          { key: "media_url", label: "Image", type: "image" },
-          { key: "media_type", label: "Media type", type: "text" },
+          { key: "image_url", label: "Image", type: "image" },
+          { key: "category", label: "Category", type: "text" },
           { key: "sort_order", label: "Display order", type: "number" },
           { key: "active", label: "Active", type: "checkbox" },
         ]}

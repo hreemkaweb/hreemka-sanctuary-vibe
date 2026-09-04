@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { productImageUrl } from "@/lib/shop";
 
+const STORAGE_BUCKET = "product-images";
+
 export type Row = Record<string, unknown>;
 
 export type FieldType =
@@ -41,10 +43,24 @@ export async function uploadMedia(file: File) {
   const ext = file.name.split(".").pop() ?? "jpg";
   const path = `${crypto.randomUUID()}.${ext}`;
   const { error } = await supabase.storage
-    .from("product-images")
+    .from(STORAGE_BUCKET)
     .upload(path, file, { contentType: file.type, upsert: false });
   if (error) throw error;
   return path;
+}
+
+export async function deleteMedia(path: string | null | undefined) {
+  if (!path) return;
+  const { error } = await supabase.storage.from(STORAGE_BUCKET).remove([path]);
+  if (error) throw error;
+}
+
+function getImageValue(row: Row | null | undefined): string | null {
+  const candidates = [row?.["image_url"], row?.["photo_url"]];
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) return candidate;
+  }
+  return null;
 }
 
 function toInput(type: FieldType, value: unknown) {
@@ -144,13 +160,32 @@ export function CrudManager({
       const payload: Row = {};
       for (const f of fields) payload[f.key] = fromInput(f.type, draft[f.key]);
       const id = draft["id"] as string | undefined;
+      const previousImage = id
+        ? getImageValue(rows.find((row) => String(row["id"]) === String(id)) ?? null)
+        : null;
+
       const { error } = id
         ? await supabase
             .from(table as never)
             .update(payload as never)
             .eq("id", id)
         : await supabase.from(table as never).insert(payload as never);
+
       if (error) throw error;
+
+      const nextImage = getImageValue(payload as Row);
+      if (id && previousImage && previousImage !== nextImage) {
+        try {
+          await deleteMedia(previousImage);
+        } catch (mediaError) {
+          toast.error(
+            mediaError instanceof Error
+              ? `Saved, but old image cleanup failed: ${mediaError.message}`
+              : "Saved, but old image cleanup failed.",
+          );
+        }
+      }
+
       toast.success(id ? "Saved" : "Created");
       setDraft(null);
       await refresh();
@@ -163,16 +198,32 @@ export function CrudManager({
 
   const remove = async (row: Row) => {
     if (!window.confirm(`Delete "${String(row[titleKey])}"? This cannot be undone.`)) return;
-    const { error } = await supabase
-      .from(table as never)
-      .delete()
-      .eq("id", row["id"] as string);
-    if (error) {
-      toast.error(error.message);
-      return;
+    const imagePath = getImageValue(row);
+
+    try {
+      const { error } = await supabase
+        .from(table as never)
+        .delete()
+        .eq("id", row["id"] as string);
+      if (error) throw error;
+
+      if (imagePath) {
+        try {
+          await deleteMedia(imagePath);
+        } catch (mediaError) {
+          toast.error(
+            mediaError instanceof Error
+              ? `Record deleted, but image cleanup failed: ${mediaError.message}`
+              : "Record deleted, but image cleanup failed.",
+          );
+        }
+      }
+
+      toast.success("Deleted");
+      await refresh();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not delete");
     }
-    toast.success("Deleted");
-    await refresh();
   };
 
   const duplicate = async (row: Row) => {
