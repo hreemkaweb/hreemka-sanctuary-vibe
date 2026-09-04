@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice, productImageUrl, type Product } from "@/lib/shop";
 import { Mandala, Particles, Reveal, SectionHeading } from "./primitives";
-import { createConsultationRequest } from "@/lib/consultation";
+import { createConsultationCheckout } from "@/lib/payments/payments.functions";
+import { runCheckout } from "@/lib/payments/checkout";
 import { useAuth } from "@/hooks/useAuth";
 import founderImg from "@/assets/founder2.JPG";
 import consultationImg from "@/assets/gallery-6.jpg";
@@ -666,7 +667,7 @@ const stories = [
   },
 ];
 
-const fallbackTestimonials = [
+const testimonials = [
   { name: "Divya P.", text: "Genuine, warm and never fear-based. Rare in this space.", rating: 5 },
   {
     name: "Rohan M.",
@@ -681,42 +682,7 @@ const fallbackTestimonials = [
   { name: "Ayesha N.", text: "I felt held, not sold to. That made all the difference.", rating: 5 },
 ];
 
-type TestimonialRow = {
-  id: string;
-  client_name?: string | null;
-  location?: string | null;
-  quote?: string | null;
-  rating?: number | null;
-  photo_url?: string | null;
-  approved?: boolean | null;
-  featured?: boolean | null;
-  sort_order?: number | null;
-};
-
 export function Stories() {
-  const { data: rows = [], isLoading } = useQuery({
-    queryKey: ["site-testimonials"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("testimonials")
-        .select("*")
-        .eq("approved", true)
-        .order("sort_order", { ascending: true });
-      if (error) throw error;
-      return (data ?? []) as TestimonialRow[];
-    },
-    staleTime: 60_000,
-  });
-
-  const testimonials = rows.length
-    ? rows.map((row) => ({
-        name: String(row.client_name ?? "Anonymous"),
-        text: String(row.quote ?? ""),
-        rating: Number(row.rating ?? 5),
-        location: String(row.location ?? ""),
-      }))
-    : fallbackTestimonials;
-
   return (
     <section id="stories" className="veil py-28 sm:py-36">
       <div className="mx-auto max-w-6xl px-6">
@@ -739,13 +705,8 @@ export function Stories() {
         </div>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {isLoading ? (
-            <div className="sm:col-span-2 lg:col-span-4 text-sm text-muted-foreground">
-              Loading testimonials…
-            </div>
-          ) : null}
           {testimonials.map((t, i) => (
-            <Reveal key={`${t.name}-${i}`} delay={i * 80}>
+            <Reveal key={t.name} delay={i * 80}>
               <article className="liquid-glass card-liquid h-full p-7">
                 <p className="text-sm tracking-[0.3em] text-gold">{"★".repeat(t.rating)}</p>
                 <p className="mt-3 leading-relaxed">{t.text}</p>
@@ -829,7 +790,7 @@ export function Events() {
 
 /* ---------------------------------- FAQ ---------------------------------- */
 
-const fallbackFaqs = [
+const faqs = [
   [
     "Is this astrology or fortune telling?",
     "No. We do not predict fixed futures or use fear. Our work is about clarity, emotional healing and practical guidance you can act on.",
@@ -852,38 +813,14 @@ const fallbackFaqs = [
   ],
 ];
 
-type FaqRow = {
-  id: string;
-  question: string;
-  answer: string;
-  sort_order: number;
-  active: boolean;
-};
-
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
-  const { data: rows = [] } = useQuery({
-    queryKey: ["site-faqs"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("faqs")
-        .select("id, question, answer, sort_order, active")
-        .eq("active", true)
-        .order("sort_order", { ascending: true });
-      if (error) throw error;
-      return (data ?? []) as FaqRow[];
-    },
-    staleTime: 60_000,
-  });
-
-  const items = rows.length ? rows.map((row) => [row.question, row.answer] as const) : fallbackFaqs;
-
   return (
     <section id="faq" className="veil py-28 sm:py-36">
       <div className="mx-auto max-w-3xl px-6">
         <SectionHeading eyebrow="Questions" title="Everything you may be wondering" />
         <div className="liquid-glass mt-14 divide-y divide-border/60 rounded-[2rem] px-8 py-2 sm:px-10">
-          {items.map(([q, a], i) => (
+          {faqs.map(([q, a], i) => (
             <div key={q} className="py-6">
               <button
                 type="button"
@@ -926,13 +863,11 @@ export function Booking() {
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formElement = e.currentTarget;
-    const form = new FormData(formElement);
+    const form = new FormData(e.currentTarget);
     const value = (k: string) => String(form.get(k) ?? "").trim();
-    const consent = form.get("consent") === "on";
     setBusy(true);
     try {
-      await createConsultationRequest({
+      const session = await createConsultationCheckout({
         data: {
           customer: { name: value("name"), email: value("email"), phone: value("phone") },
           service: value("service"),
@@ -940,45 +875,20 @@ export function Booking() {
           preferredDate: value("date"),
           preferredTime: value("time"),
           message: value("message"),
-          consent,
         },
       });
-
-      const notification = [
-        "New Consultation Request",
-        "",
-        `Name: ${value("name")}`,
-        `Email: ${value("email")}`,
-        `Phone: ${value("phone")}`,
-        "",
-        `Service: ${value("service")}`,
-        `Mode: ${value("mode")}`,
-        "",
-        `Preferred Date: ${value("date")}`,
-        `Preferred Time: ${value("time")}`,
-        "",
-        "Guidance:",
-        value("message"),
-        "",
-        "Consent: Yes",
-        "Please review this consultation in the Admin Dashboard.",
-      ].join("\n");
-      const whatsappUrl = `${WHATSAPP.split("?")[0]}?text=${encodeURIComponent(notification)}`;
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-      setSubmitted(true);
-      toast.success("Your consultation request has been submitted successfully.");
-      formElement.reset();
+      const result = await runCheckout(session, { description: session.recordLabel });
+      if (result.status === "successful") {
+        setSubmitted(true);
+        toast.success("Payment received — your session is confirmed.");
+      } else if (result.status === "processing") {
+        setSubmitted(true);
+        toast.message(result.message ?? "We are confirming your payment.");
+      } else {
+        toast.error(result.message ?? "Payment was not completed.");
+      }
     } catch (err) {
-      const error = err as {
-        message?: string;
-        code?: string;
-        details?: string;
-        hint?: string;
-      };
-      console.error("Consultation submission failed", error);
-      toast.error(
-        error.message ?? "Could not submit your consultation request",
-      );
+      toast.error(err instanceof Error ? err.message : "Could not start the payment");
     } finally {
       setBusy(false);
     }
@@ -992,7 +902,7 @@ export function Booking() {
         <SectionHeading
           eyebrow="Book a consultation"
           title="Your first conversation begins here"
-          subtitle="Share a few details and we will contact you shortly to confirm your session."
+          subtitle="Share a few details, pay securely, and your session is confirmed straight away."
         />
 
         <Reveal delay={120}>
@@ -1057,7 +967,6 @@ export function Booking() {
                 <textarea
                   name="message"
                   rows={4}
-                  required
                   maxLength={1000}
                   className="field resize-none"
                   placeholder="Share as much or as little as you wish"
@@ -1065,7 +974,7 @@ export function Booking() {
               </Field>
             </div>
             <label className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground sm:col-span-2">
-              <input name="consent" type="checkbox" required className="glass-check mt-0.5" />
+              <input type="checkbox" required className="glass-check mt-0.5" />
               <span>
                 I understand this is a supportive wellness consultation and consent to being
                 contacted about my session.
@@ -1073,15 +982,14 @@ export function Booking() {
             </label>
             <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
               <button type="submit" disabled={busy} className="btn-sacred disabled:opacity-60">
-                {busy ? "Submitting…" : "SUBMIT DETAILS"}
+                {busy ? "Opening secure payment…" : "Pay & confirm my session"}
               </button>
               <a href={WHATSAPP} target="_blank" rel="noreferrer" className="btn-ghost-sacred">
                 Chat on WhatsApp
               </a>
               {submitted ? (
                 <p className="text-sm text-primary">
-                  Your consultation request has been submitted successfully. We will contact you
-                  shortly to confirm your session.
+                  Thank you — your session is confirmed. We will be in touch shortly.
                 </p>
               ) : null}
             </div>

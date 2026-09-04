@@ -13,30 +13,24 @@ export const Route = createFileRoute("/_authenticated/admin/bookings")({
             .slice(0, 16)
             .replace("T", " ")} · ${String(r["status"])}`
         }
-        searchKeys={["customer_name", "email", "phone", "service"]}
+        searchKeys={["customer_name", "customer_email", "customer_phone", "service"]}
         orderBy={{ column: "created_at", ascending: false }}
         defaults={{
           customer_name: "",
-          email: "",
-          phone: "",
+          customer_email: "",
+          customer_phone: "",
           service: "",
-          consultation_type: "online",
           preferred_date: null,
-          preferred_time: "",
           message: "",
-          consent: false,
           status: "pending",
           admin_notes: "",
         }}
         fields={[
           { key: "customer_name", label: "Name", type: "text" },
-          { key: "email", label: "Email", type: "text" },
-          { key: "phone", label: "Phone", type: "text" },
+          { key: "customer_email", label: "Email", type: "text" },
+          { key: "customer_phone", label: "Phone", type: "text" },
           { key: "service", label: "Service", type: "text" },
-          { key: "consultation_type", label: "Mode", type: "text" },
-          { key: "preferred_date", label: "Preferred date", type: "date" },
-          { key: "preferred_time", label: "Preferred time", type: "text" },
-          { key: "consent", label: "Consent received", type: "checkbox" },
+          { key: "preferred_date", label: "Preferred date", type: "datetime" },
           {
             key: "status",
             label: "Status",

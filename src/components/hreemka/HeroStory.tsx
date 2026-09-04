@@ -44,12 +44,7 @@ const scenes = [
 
 export function HeroStory() {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const heroSectionRef = useRef<HTMLElement | null>(null);
   const sceneFiveVideoRef = useRef<HTMLVideoElement>(null);
-  const logoRef = useRef<HTMLDivElement | null>(null);
-  const animationFrameRef = useRef<number | null>(null);
-  const currentPosRef = useRef({ x: 0, y: 0 });
-  const targetPosRef = useRef({ x: 0, y: 0 });
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -100,125 +95,9 @@ export function HeroStory() {
     };
   }, [active]);
 
-  useEffect(() => {
-    const hero = heroSectionRef.current;
-    const logo = logoRef.current;
-    if (!hero || !logo) return;
-
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
-
-    const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-
-    const applyTransform = (x: number, y: number) => {
-      const existing = logo.style.transform || "";
-      const hasExisting = existing && existing !== "none";
-      logo.style.transform = hasExisting
-        ? `${existing} translate3d(${x}px, ${y}px, 0)`
-        : `translate3d(${x}px, ${y}px, 0)`;
-    };
-
-    const render = () => {
-      const currentX = currentPosRef.current.x;
-      const currentY = currentPosRef.current.y;
-      const targetX = targetPosRef.current.x;
-      const targetY = targetPosRef.current.y;
-
-      const nextX = currentX + (targetX - currentX) * 0.12;
-      const nextY = currentY + (targetY - currentY) * 0.12;
-
-      currentPosRef.current = { x: nextX, y: nextY };
-      applyTransform(nextX, nextY);
-
-      if (Math.abs(targetX - nextX) > 0.08 || Math.abs(targetY - nextY) > 0.08) {
-        animationFrameRef.current = window.requestAnimationFrame(render);
-      } else {
-        animationFrameRef.current = null;
-      }
-    };
-
-    const resetProfile = () => {
-      targetPosRef.current = { x: 0, y: 0 };
-      currentPosRef.current = { x: 0, y: 0 };
-      if (animationFrameRef.current !== null) {
-        window.cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
-      applyTransform(0, 0);
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (active !== 0 || reducedMotionQuery.matches || coarsePointerQuery.matches) return;
-
-      const rect = hero.getBoundingClientRect();
-      const relativeX = (event.clientX - rect.left) / rect.width;
-      const relativeY = (event.clientY - rect.top) / rect.height;
-
-      targetPosRef.current = {
-        x: clamp((relativeX - 0.5) * 50, -25, 25),
-        y: clamp((relativeY - 0.5) * 36, -18, 18),
-      };
-
-      if (animationFrameRef.current === null) {
-        animationFrameRef.current = window.requestAnimationFrame(render);
-      }
-    };
-
-    const handlePointerLeave = () => {
-      targetPosRef.current = { x: 0, y: 0 };
-      if (animationFrameRef.current === null) {
-        animationFrameRef.current = window.requestAnimationFrame(render);
-      }
-    };
-
-    const handleMediaChange = () => {
-      if (reducedMotionQuery.matches || coarsePointerQuery.matches) {
-        resetProfile();
-      }
-    };
-
-    hero.addEventListener("pointermove", handlePointerMove);
-    hero.addEventListener("pointerleave", handlePointerLeave);
-
-    if (typeof reducedMotionQuery.addEventListener === "function") {
-      reducedMotionQuery.addEventListener("change", handleMediaChange);
-    } else {
-      reducedMotionQuery.addListener(handleMediaChange);
-    }
-
-    if (typeof coarsePointerQuery.addEventListener === "function") {
-      coarsePointerQuery.addEventListener("change", handleMediaChange);
-    } else {
-      coarsePointerQuery.addListener(handleMediaChange);
-    }
-
-    return () => {
-      if (animationFrameRef.current !== null) {
-        window.cancelAnimationFrame(animationFrameRef.current);
-      }
-
-      hero.removeEventListener("pointermove", handlePointerMove);
-      hero.removeEventListener("pointerleave", handlePointerLeave);
-
-      if (typeof reducedMotionQuery.removeEventListener === "function") {
-        reducedMotionQuery.removeEventListener("change", handleMediaChange);
-      } else {
-        reducedMotionQuery.removeListener(handleMediaChange);
-      }
-
-      if (typeof coarsePointerQuery.removeEventListener === "function") {
-        coarsePointerQuery.removeEventListener("change", handleMediaChange);
-      } else {
-        coarsePointerQuery.removeListener(handleMediaChange);
-      }
-
-      resetProfile();
-    };
-  }, [active]);
-
   return (
     <div ref={wrapRef} className="relative" style={{ height: "500vh" }}>
-      <section ref={heroSectionRef} className="sticky top-0 flex h-screen items-center overflow-hidden">
+      <section className="sticky top-0 flex h-screen items-center overflow-hidden">
         {scenes.map((scene, i) => (
           <div
             key={scene.title}
@@ -247,7 +126,7 @@ export function HeroStory() {
               </video>
             )}
             {i === 0 && (
-              <div ref={logoRef} className="hero-scene-fallback" aria-hidden="true">
+              <div className="hero-scene-fallback" aria-hidden="true">
                 <div className="hero-scene-fallback-mark">
                   <span />
                   <i />
